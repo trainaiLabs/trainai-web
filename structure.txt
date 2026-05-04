@@ -1,0 +1,57 @@
+폴더 PATH의 목록입니다.
+볼륨 일련 번호는 8AC9-BEF1입니다.
+C:\TRAINAI-WEB\APP
+│  favicon.ico
+│  globals.css
+│  layout.tsx
+│  page.tsx
+│  
+├─admin
+│  ├─(protected)
+│  │  │  layout.tsx
+│  │  │  
+│  │  ├─accounts
+│  │  │      page.tsx
+│  │  │      
+│  │  ├─dashboard
+│  │  │      page.tsx
+│  │  │      
+│  │  ├─logs
+│  │  │      page.tsx
+│  │  │      
+│  │  ├─monetization
+│  │  │      page.tsx
+│  │  │      
+│  │  ├─notices
+│  │  │      page.tsx
+│  │  │      
+│  │  ├─projects
+│  │  │  │  page.tsx
+│  │  │  │  
+│  │  │  └─[projectId]
+│  │  │          page.tsx
+│  │  │          
+│  │  ├─quality
+│  │  │  │  page.tsx
+│  │  │  │  
+│  │  │  └─[projectId]
+│  │  │          page.tsx
+│  │  │          
+│  │  ├─support-tickets
+│  │  │      page.tsx
+│  │  │      
+│  │  ├─users
+│  │  │      page.tsx
+│  │  │      
+│  │  ├─withdrawals
+│  │  │      page.tsx
+│  │  │      
+│  │  └─workers
+│  │          page.tsx
+│  │          
+│  └─login
+│          page.tsx
+│          
+└─recover-password
+        page.tsx
+        
