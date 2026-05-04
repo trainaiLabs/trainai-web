@@ -6,20 +6,28 @@ export default function RecoverPasswordPage() {
   const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    // 현재 URL에서 토큰(hash) 가져오기
-    const hash = window.location.hash;
-    
-    if (hash) {
-      // 예: #access_token=... 형태
-      const params = new URLSearchParams(hash.replace('#', ''));
-      const accessToken = params.get('access_token');
-      const refreshToken = params.get('refresh_token');
+    // 1) Supabase PKCE 방식: ?code=...
+    const queryParams = new URLSearchParams(window.location.search);
+    const code = queryParams.get('code');
 
-      if (accessToken) {
+    if (code) {
+      const deepLink = `trainai://recover-password?code=${code}`;
+      setRedirectUrl(deepLink);
+      window.location.href = deepLink;
+      return;
+    }
+
+    // 2) 예전 토큰 방식: #access_token=...&refresh_token=...
+    const hash = window.location.hash;
+
+    if (hash) {
+      const hashParams = new URLSearchParams(hash.replace('#', ''));
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+
+      if (accessToken && refreshToken) {
         const deepLink = `trainai://recover-password?access_token=${accessToken}&refresh_token=${refreshToken}`;
         setRedirectUrl(deepLink);
-
-        // 자동 이동 시도
         window.location.href = deepLink;
       }
     }
@@ -35,7 +43,6 @@ export default function RecoverPasswordPage() {
       gap: '20px'
     }}>
       <h1>비밀번호 재설정</h1>
-
       <p>앱으로 이동하여 비밀번호를 변경하세요.</p>
 
       {redirectUrl && (
