@@ -19,18 +19,35 @@ export default function RecoverPasswordPage() {
   useEffect(() => {
     const init = async () => {
       const params = new URLSearchParams(window.location.search);
+      const errorDescription = params.get('error_description');
+
+      if (errorDescription) {
+        setMessage(`인증 실패: ${errorDescription}`);
+        setLoading(false);
+        return;
+      }
+
       const code = params.get('code');
 
       if (!code) {
-        setMessage('비밀번호 재설정 링크가 올바르지 않습니다.');
+        setMessage(
+          `비밀번호 재설정 링크가 올바르지 않습니다.
+          현재 주소: ${window.location.href}
+          search: ${window.location.search}
+          hash: ${window.location.hash}`
+        );
         setLoading(false);
-        return;
+          return;
       }
 
       const { error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (error) {
-        setMessage(`인증 실패: ${error.message}`);
+        setMessage(
+          `인증 실패: ${error.message}
+          현재 주소: ${window.location.href}
+          code: ${code}`
+        );
         setLoading(false);
         return;
       }

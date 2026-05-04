@@ -23,7 +23,7 @@ export default function ResetPasswordPage() {
     setMessage('');
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://trainai.co.kr/recover-password',
+      redirectTo: 'https://www.trainai.co.kr/recover-password',
     });
 
     if (error) {
