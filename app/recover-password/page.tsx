@@ -18,41 +18,48 @@ export default function RecoverPasswordPage() {
 
   useEffect(() => {
     const init = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const errorDescription = params.get('error_description');
+      const queryParams = new URLSearchParams(window.location.search);
+      const code = queryParams.get('code');
 
-      if (errorDescription) {
-        setMessage(`인증 실패: ${errorDescription}`);
-        setLoading(false);
-        return;
-      }
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
 
-      const code = params.get('code');
-
-      if (!code) {
-        setMessage(
-          `비밀번호 재설정 링크가 올바르지 않습니다.
-          현재 주소: ${window.location.href}
-          search: ${window.location.search}
-          hash: ${window.location.hash}`
-        );
-        setLoading(false);
+        if (error) {
+          setMessage(`인증 실패: ${error.message}`);
+          setLoading(false);
           return;
-      }
+        }
 
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-      if (error) {
-        setMessage(
-          `인증 실패: ${error.message}
-          현재 주소: ${window.location.href}
-          code: ${code}`
-        );
+        setSessionReady(true);
         setLoading(false);
         return;
       }
 
-      setSessionReady(true);
+      const hashParams = new URLSearchParams(
+        window.location.hash.replace('#', '')
+      );
+
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+
+      if (accessToken && refreshToken) {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+
+        if (error) {
+          setMessage(`인증 실패: ${error.message}`);
+          setLoading(false);
+          return;
+        }
+
+        setSessionReady(true);
+        setLoading(false);
+        return;
+      }
+
+      setMessage('비밀번호 재설정 링크가 올바르지 않습니다.');
       setLoading(false);
     };
 
