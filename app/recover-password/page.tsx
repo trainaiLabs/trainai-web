@@ -83,6 +83,7 @@ export default function RecoverPasswordPage() {
     return (
       <main style={styles.page}>
         <section style={styles.card}>
+          <div style={styles.logo}>TrainAI</div>
           <h1 style={styles.title}>비밀번호 재설정</h1>
           <p style={styles.description}>인증 정보를 확인하고 있습니다...</p>
         </section>
@@ -130,10 +131,12 @@ export default function RecoverPasswordPage() {
         </div>
 
         {message && (
-          <p style={{
-            ...styles.message,
-            color: message.includes('변경되었습니다') ? '#15803d' : '#dc2626',
-          }}>
+          <p
+            style={{
+              ...styles.message,
+              color: message.includes('변경되었습니다') ? '#15803d' : '#dc2626',
+            }}
+          >
             {message}
           </p>
         )}
