@@ -13,6 +13,7 @@ export default function RecoverPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(true);
   const [changing, setChanging] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -67,7 +68,7 @@ export default function RecoverPasswordPage() {
   }, []);
 
   const handleChangePassword = async () => {
-    if (changing) return;
+    if (changing || success) return;
 
     if (!sessionReady) {
       setMessage('인증이 완료되지 않았습니다. 재설정 메일을 다시 요청해주세요.');
@@ -92,13 +93,14 @@ export default function RecoverPasswordPage() {
     });
 
     if (error) {
-      setMessage(`비밀번호 변경 실패: ${error.message}`);
+      setMessage(getResetPasswordErrorMessage(error.message));
       setChanging(false);
       return;
     }
 
     await supabase.auth.signOut();
 
+    setSuccess(true);
     setMessage('비밀번호가 변경되었습니다. 앱에서 새 비밀번호로 로그인해주세요.');
     setChanging(false);
   };
@@ -144,13 +146,18 @@ export default function RecoverPasswordPage() {
 
           <button
             onClick={handleChangePassword}
-            disabled={changing || !sessionReady}
+            disabled={changing || !sessionReady || success}
             style={{
               ...styles.button,
               opacity: changing || !sessionReady ? 0.6 : 1,
+              cursor: changing || !sessionReady || success ? 'not-allowed' : 'pointer',
             }}
           >
-            {changing ? '변경 중...' : '비밀번호 변경'}
+            {changing
+              ? '변경 중...'
+              : success
+                ? '비밀번호 변경 완료'
+                : '비밀번호 변경'}
           </button>
         </div>
 
@@ -167,6 +174,36 @@ export default function RecoverPasswordPage() {
       </section>
     </main>
   );
+}
+
+function getResetPasswordErrorMessage(errorMessage?: string) {
+  const message = errorMessage?.toLowerCase() ?? '';
+
+  if (message.includes('different from the old password')) {
+    return '기존 비밀번호와 다른 새 비밀번호를 입력해주세요.';
+  }
+
+  if (message.includes('password should be at least')) {
+    return '비밀번호는 최소 6자 이상 입력해주세요.';
+  }
+
+  if (message.includes('weak password')) {
+    return '보안이 약한 비밀번호입니다. 다른 비밀번호를 입력해주세요.';
+  }
+
+  if (message.includes('expired')) {
+    return '비밀번호 재설정 링크가 만료되었습니다. 다시 요청해주세요.';
+  }
+
+  if (message.includes('invalid')) {
+    return '비밀번호 재설정 링크가 올바르지 않습니다. 다시 요청해주세요.';
+  }
+
+  if (message.includes('session')) {
+    return '인증 세션이 만료되었습니다. 비밀번호 재설정을 다시 요청해주세요.';
+  }
+
+  return '비밀번호 변경에 실패했습니다. 잠시 후 다시 시도해주세요.';
 }
 
 const styles: Record<string, React.CSSProperties> = {

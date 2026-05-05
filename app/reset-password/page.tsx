@@ -11,9 +11,12 @@ const supabase = createClient(
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleReset = async () => {
+    if (loading || sent) return;
+
     if (!email) {
       setMessage('이메일을 입력해주세요.');
       return;
@@ -23,12 +26,13 @@ export default function ResetPasswordPage() {
     setMessage('');
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://www.trainai.co.kr/recover-password',
+      redirectTo: 'https://trainai.co.kr/recover-password',
     });
 
     if (error) {
       setMessage(`오류: ${error.message}`);
     } else {
+      setSent(true);
       setMessage('비밀번호 재설정 메일을 보냈습니다.');
     }
 
@@ -55,13 +59,18 @@ export default function ResetPasswordPage() {
 
         <button
           onClick={handleReset}
-          disabled={loading}
+          disabled={loading || sent}
           style={{
             ...styles.button,
             opacity: loading ? 0.6 : 1,
+            cursor: loading || sent ? 'not-allowed' : 'pointer',
           }}
         >
-          {loading ? '전송 중...' : '재설정 메일 보내기'}
+          {loading
+            ? '전송 중...'
+            : sent
+              ? '재설정 메일 발송 완료'
+              : '재설정 메일 보내기'}
         </button>
 
         {message && (
