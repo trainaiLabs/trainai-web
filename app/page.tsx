@@ -21,8 +21,6 @@ export default function HomePage() {
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
               AI를 만드는 사람은
               <br />
-              따로 있지 않습니다.
-              <br />
               <span className="bg-gradient-to-r from-[#8b5cf6] to-[#c084fc] bg-clip-text text-transparent">
                 바로 당신입니다.
               </span>
@@ -35,7 +33,7 @@ export default function HomePage() {
                 당신의 선택은 <span className="font-semibold text-[#7c3aed]">AI 학습 데이터</span>가 됩니다.
               <br /><br />
                 참여하면 <span className="font-semibold text-[#7c3aed]">포인트</span>가 쌓이고,  
-                <span className="font-semibold text-[#7c3aed]">출금 신청</span>으로  
+                <span className="font-semibold text-[#7c3aed]"> 출금 신청</span>으로  
                 <span className="font-semibold text-[#7c3aed]"> 보상</span>받을 수 있습니다.
             </p>
 
