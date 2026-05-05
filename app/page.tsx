@@ -34,9 +34,9 @@ export default function HomePage() {
               <br />
                 당신의 선택은 <span className="font-semibold text-[#7c3aed]">AI 학습 데이터</span>가 됩니다.
               <br /><br />
-                <span className="font-semibold text-[#7c3aed]">참여하면 포인트</span>가 쌓이고,  
+                참여하면 <span className="font-semibold text-[#7c3aed]">포인트</span>가 쌓이고,  
                 <span className="font-semibold text-[#7c3aed]">출금 신청</span>으로  
-                <span className="font-semibold text-[#7c3aed]">보상</span>받을 수 있습니다.
+                <span className="font-semibold text-[#7c3aed]"> 보상</span>받을 수 있습니다.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -79,7 +79,7 @@ export default function HomePage() {
 
       <section id="about" className="bg-white px-6 py-16">
         <div className="mx-auto max-w-6xl p-8">
-          <h2 className="text-3xl font-bold">AI는 사람의 선택으로 성장합니다</h2>
+          <h2 className="text-3xl font-bold">AI는 당신의 선택으로 성장합니다</h2>
             <p className="mt-4 max-w-2xl text-slate-600">
               TrainAI에서 당신은 AI를 가르치고, 더 나은 AI를 만드는 데 참여합니다.
             </p>
@@ -159,8 +159,8 @@ export default function HomePage() {
           </div>
 
           <h2 className="text-3xl font-bold">
-            <span className="text-[#7c3aed]">AI를 가르치고</span>,  
-            <span className="text-[#7c3aed]">보상</span>받으세요
+            <span className="text-[#7c3aed]">AI를 가르치고</span>  
+            <span className="text-[#7c3aed]"> 보상</span>받으세요
           </h2>
         </div>
       </section>
