@@ -58,12 +58,20 @@ export default function ResetPasswordPage() {
         />
 
         <button
+          type="button"
           onClick={handleReset}
           disabled={loading || sent}
           style={{
-            ...styles.button,
-            opacity: loading ? 0.6 : 1,
-            cursor: loading || sent ? 'not-allowed' : 'pointer',
+            width: '100%',
+            padding: '14px',
+            borderRadius: '10px',
+            fontWeight: 'bold',
+            border: 'none',
+            backgroundColor:
+              loading || sent ? '#d1d5db' : '#7c3aed', // 회색으로 변경
+            color: loading || sent ? '#6b7280' : '#fff',
+            cursor: loading || sent ? 'default' : 'pointer',
+            transition: 'all 0.2s',
           }}
         >
           {loading

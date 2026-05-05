@@ -134,6 +134,7 @@ export default function RecoverPasswordPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             style={styles.input}
+            disabled={success}
           />
 
           <input
@@ -142,15 +143,26 @@ export default function RecoverPasswordPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             style={styles.input}
+            disabled={success}
           />
 
           <button
+            type="button"
             onClick={handleChangePassword}
             disabled={changing || !sessionReady || success}
             style={{
-              ...styles.button,
-              opacity: changing || !sessionReady ? 0.6 : 1,
-              cursor: changing || !sessionReady || success ? 'not-allowed' : 'pointer',
+              width: '100%',
+              padding: '14px',
+              borderRadius: '10px',
+              fontWeight: 'bold',
+              border: 'none',
+              backgroundColor:
+                changing || !sessionReady || success ? '#d1d5db' : '#7c3aed',
+              color:
+                changing || !sessionReady || success ? '#6b7280' : '#fff',
+              cursor:
+                changing || !sessionReady || success ? 'default' : 'pointer',
+              transition: 'all 0.2s',
             }}
           >
             {changing
