@@ -73,7 +73,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="about" className="bg-white px-6 py-20">
+      <section id="about" className="bg-white px-6 py-16">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold">AI는 혼자 성장하지 않습니다</h2>
           <p className="mt-4 max-w-2xl text-slate-600">
@@ -98,18 +98,61 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="reward" className="bg-[#faf7ff] px-6 py-20">
+      <section id="reward" className="bg-[#faf7ff] px-6 py-16">
         <div className="mx-auto max-w-6xl rounded-3xl bg-white p-10 shadow-lg shadow-purple-100">
-          <h2 className="text-3xl font-bold">기여에 대한 보상</h2>
-          <p className="mt-4 max-w-3xl text-slate-600">
-            퀘스트를 완료하면 포인트와 XP를 얻을 수 있습니다. 적립된 포인트는
-            서비스 정책에 따라 출금 신청을 통해 보상받을 수 있습니다.
+          <div className="inline-flex rounded-full bg-[#f3e8ff] px-4 py-2 text-sm font-bold text-[#7c3aed]">
+            포인트 출금 가능
+          </div>
+
+          <h2 className="mt-5 text-3xl font-bold">기여에 대한 보상</h2>
+
+          <p className="mt-4 max-w-3xl text-lg font-medium leading-8 text-slate-700">
+            퀘스트를 완료하면 포인트와 XP를 얻을 수 있습니다.
+            적립된 포인트는 서비스 정책에 따라 출금 신청을 통해 실제 보상으로 받을 수 있습니다.
+          </p>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl bg-[#faf7ff] p-5">
+              <p className="text-sm font-bold text-[#7c3aed]">STEP 1</p>
+              <p className="mt-2 font-bold">퀘스트 참여</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                AI 답변을 비교하고 더 좋은 선택을 고릅니다.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-[#faf7ff] p-5">
+              <p className="text-sm font-bold text-[#7c3aed]">STEP 2</p>
+              <p className="mt-2 font-bold">포인트 적립</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                참여 결과에 따라 포인트와 XP가 쌓입니다.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-[#faf7ff] p-5">
+              <p className="text-sm font-bold text-[#7c3aed]">STEP 3</p>
+              <p className="mt-2 font-bold">출금 신청</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                적립된 포인트는 출금 신청을 통해 보상받을 수 있습니다.
+              </p>
+            </div>
+          </div>
+
+          <p className="mt-8 text-xl font-extrabold text-[#7c3aed]">
+            참여한 만큼, 포인트가 쌓이고 실제 보상으로 이어집니다.
           </p>
         </div>
       </section>
 
-      <footer className="bg-white px-6 py-8 text-center text-sm text-slate-500">
-        © 2026 TrainAI. All rights reserved.
+      <footer className="bg-white px-6 py-10 text-center text-sm text-slate-500">
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <span>© 2026 TrainAI. All rights reserved.</span>
+          <Link href="/terms" className="hover:text-[#7c3aed]">
+            이용약관
+          </Link>
+          <Link href="/privacy" className="hover:text-[#7c3aed]">
+            개인정보처리방침
+          </Link>
+        </div>
       </footer>
     </main>
   );
