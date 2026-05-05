@@ -77,7 +77,7 @@ export default function HomePage() {
       </section>
 
       <section id="about" className="bg-white px-6 py-16">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-6xl p-8">
           <h2 className="text-3xl font-bold">AI는 혼자 성장하지 않습니다</h2>
           <p className="mt-4 max-w-2xl text-slate-600">
             AI는 사람의 판단을 통해 더 좋은 방향으로 학습합니다. TrainAI에서
@@ -102,8 +102,7 @@ export default function HomePage() {
       </section>
 
       <section id="reward" className="bg-[#faf7ff] px-6 py-16">
-        <div className="mx-auto max-w-6xl">
-          <div className="rounded-3xl bg-white p-8 shadow-lg shadow-purple-100">
+        <div className="mx-auto max-w-6xl rounded-3xl bg-white p-8 shadow-lg">
           <div className="inline-flex rounded-full bg-[#f3e8ff] px-4 py-2 text-sm font-bold text-[#7c3aed]">
             포인트 출금 가능
           </div>
@@ -139,7 +138,6 @@ export default function HomePage() {
                 적립된 포인트는 출금 신청을 통해 보상받을 수 있습니다.
               </p>
             </div>
-          </div>
           </div>
 
           <p className="mt-8 text-xl font-extrabold text-[#7c3aed]">
