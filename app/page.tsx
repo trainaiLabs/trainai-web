@@ -29,13 +29,14 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              TrainAI는 사용자가 AI의 답변을 비교하고 평가하면서 더 나은
-              AI를 만드는 데 직접 참여할 수 있는 플랫폼입니다.
+              <span className="font-semibold text-[#7c3aed]">AI 답변</span>을 비교하고  
+                더 좋은 선택을 골라주세요.
               <br />
-              당신의 선택 하나하나가 AI의 학습 데이터가 됩니다.
+                당신의 선택은 <span className="font-semibold text-[#7c3aed]">AI 학습 데이터</span>가 됩니다.
               <br /><br />
-              AI를 가르치는 간단한 퀘스트에 참여하고, 쌓인 포인트는 출금 신청을 통해 실제 보상으로 받을 수 있습니다.
-              <br />
+                <span className="font-semibold text-[#7c3aed]">참여하면 포인트</span>가 쌓이고,  
+                <span className="font-semibold text-[#7c3aed]">출금 신청</span>으로  
+                <span className="font-semibold text-[#7c3aed]">보상</span>받을 수 있습니다.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -78,24 +79,34 @@ export default function HomePage() {
 
       <section id="about" className="bg-white px-6 py-16">
         <div className="mx-auto max-w-6xl p-8">
-          <h2 className="text-3xl font-bold">AI는 혼자 성장하지 않습니다</h2>
-          <p className="mt-4 max-w-2xl text-slate-600">
-            AI는 사람의 판단을 통해 더 좋은 방향으로 학습합니다. TrainAI에서
-            사용자는 단순한 이용자가 아니라 AI를 가르치는 참여자가 됩니다.
-          </p>
-
+          <h2 className="text-3xl font-bold">AI는 사람의 선택으로 성장합니다</h2>
+            <p className="mt-4 max-w-2xl text-slate-600">
+              TrainAI에서 당신은 AI를 가르치고, 더 나은 AI를 만드는 데 참여합니다.
+            </p>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             <FeatureCard
-              title="간단한 퀘스트"
-              text="두 답변 중 더 좋은 답변을 선택하거나 문장의 자연스러움을 평가합니다."
+              title="퀘스트 참여"
+              text={
+                <>
+                  더 좋은 <span className="font-semibold text-[#7c3aed]">AI 답변</span>을 선택하세요.
+                </>
+              }
             />
             <FeatureCard
               title="AI 학습 기여"
-              text="당신의 선택은 더 좋은 AI를 만들기 위한 학습 데이터가 됩니다."
+              text={
+                <>
+                  당신의 선택이 <span className="font-semibold text-[#7c3aed]">학습 데이터</span>가 됩니다.
+                </>
+              }
             />
             <FeatureCard
-              title="포인트와 XP"
-              text="참여한 만큼 포인트와 경험치가 쌓이고 티어가 성장합니다."
+              title="포인트 적립"
+              text={
+                <>
+                  참여할수록 <span className="font-semibold text-[#7c3aed]">포인트</span>와 XP가 쌓입니다.
+                </>
+              }
             />
           </div>
         </div>
@@ -110,14 +121,17 @@ export default function HomePage() {
           <h2 className="mt-5 text-3xl font-bold">기여에 대한 보상</h2>
 
           <p className="mt-4 max-w-3xl text-lg font-medium leading-8 text-slate-700">
-            퀘스트를 완료하면 포인트와 XP를 얻을 수 있습니다.
-            적립된 포인트는 서비스 정책에 따라 출금 신청을 통해 실제 보상으로 받을 수 있습니다.
+            퀘스트에 참여하면 <span className="font-semibold text-[#7c3aed]">포인트</span>와 XP가 쌓입니다.  
+            적립된 포인트는 <span className="font-semibold text-[#7c3aed]">출금 신청</span>을 통해  
+            <span className="font-semibold text-[#7c3aed]">보상</span>받을 수 있습니다.
           </p>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl bg-[#faf7ff] p-5">
               <p className="text-sm font-bold text-[#7c3aed]">STEP 1</p>
-              <p className="mt-2 font-bold">퀘스트 참여</p>
+              <p className="mt-2 font-bold">
+                <span className="text-[#7c3aed]">퀘스트</span> 참여
+              </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
                 AI 답변을 비교하고 더 좋은 선택을 고릅니다.
               </p>
@@ -125,7 +139,9 @@ export default function HomePage() {
 
             <div className="rounded-2xl bg-[#faf7ff] p-5">
               <p className="text-sm font-bold text-[#7c3aed]">STEP 2</p>
-              <p className="mt-2 font-bold">포인트 적립</p>
+              <p className="mt-2 font-bold">
+                <span className="text-[#7c3aed]">포인트</span> 적립
+              </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
                 참여 결과에 따라 포인트와 XP가 쌓입니다.
               </p>
@@ -133,27 +149,30 @@ export default function HomePage() {
 
             <div className="rounded-2xl bg-[#faf7ff] p-5">
               <p className="text-sm font-bold text-[#7c3aed]">STEP 3</p>
-              <p className="mt-2 font-bold">출금 신청</p>
+              <p className="mt-2 font-bold">
+                <span className="text-[#7c3aed]">출금</span> 신청
+              </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
                 적립된 포인트는 출금 신청을 통해 보상받을 수 있습니다.
               </p>
             </div>
           </div>
 
-          <p className="mt-8 text-xl font-extrabold text-[#7c3aed]">
-            참여한 만큼, 포인트가 쌓이고 실제 보상으로 이어집니다.
-          </p>
+          <h2 className="text-3xl font-bold">
+            <span className="text-[#7c3aed]">AI를 가르치고</span>,  
+            <span className="text-[#7c3aed]">보상</span>받으세요
+          </h2>
         </div>
       </section>
 
       <section className="bg-white px-6 py-20 text-center">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-3xl font-bold">
-            지금 바로 AI 학습에 참여해보세요
+            AI를 가르칠 준비 되셨나요?
           </h2>
 
           <p className="mt-4 text-lg text-slate-600">
-            간단한 선택만으로 AI를 더 똑똑하게 만들고, 포인트를 쌓아 실제 보상으로 이어집니다.
+            퀘스트를 완료하고 포인트 보상을 받아보세요.
           </p>
 
           <div className="mt-8 flex justify-center gap-4">
@@ -185,7 +204,7 @@ export default function HomePage() {
   );
 }
 
-function FeatureCard({ title, text }: { title: string; text: string }) {
+function FeatureCard({ title, text }: { title: string;   text: React.ReactNode; }) {
   return (
     <div className="rounded-2xl border border-purple-100 bg-white p-6 shadow-sm">
       <h3 className="text-lg font-bold text-[#7c3aed]">{title}</h3>
