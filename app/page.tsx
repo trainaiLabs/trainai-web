@@ -33,20 +33,23 @@ export default function HomePage() {
               AI를 만드는 데 직접 참여할 수 있는 플랫폼입니다.
               <br />
               당신의 선택 하나하나가 AI의 학습 데이터가 됩니다.
+              <br /><br />
+              AI를 가르치는 간단한 퀘스트에 참여하고, 쌓인 포인트는 출금 신청을 통해 실제 보상으로 받을 수 있습니다.
+              <br />
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="#about"
+                href="#reward"
                 className="rounded-xl bg-[#8b5cf6] px-6 py-3 font-semibold text-white shadow-lg shadow-purple-200 transition hover:bg-[#7c3aed]"
               >
-                서비스 알아보기
+                포인트 보상 알아보기
               </Link>
               <Link
-                href="#reward"
+                href="#about"
                 className="rounded-xl bg-white px-6 py-3 font-semibold text-[#7c3aed] shadow-sm transition hover:bg-purple-50"
               >
-                보상 방식 보기
+                서비스 알아보기
               </Link>
             </div>
           </div>
@@ -99,7 +102,8 @@ export default function HomePage() {
       </section>
 
       <section id="reward" className="bg-[#faf7ff] px-6 py-16">
-        <div className="mx-auto max-w-6xl rounded-3xl bg-white p-10 shadow-lg shadow-purple-100">
+        <div className="mx-auto max-w-6xl">
+          <div className="rounded-3xl bg-white p-8 shadow-lg shadow-purple-100">
           <div className="inline-flex rounded-full bg-[#f3e8ff] px-4 py-2 text-sm font-bold text-[#7c3aed]">
             포인트 출금 가능
           </div>
@@ -136,10 +140,35 @@ export default function HomePage() {
               </p>
             </div>
           </div>
+          </div>
 
           <p className="mt-8 text-xl font-extrabold text-[#7c3aed]">
             참여한 만큼, 포인트가 쌓이고 실제 보상으로 이어집니다.
           </p>
+        </div>
+      </section>
+
+      <section className="bg-white px-6 py-20 text-center">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="text-3xl font-bold">
+            지금 바로 AI 학습에 참여해보세요
+          </h2>
+
+          <p className="mt-4 text-lg text-slate-600">
+            간단한 선택만으로 AI를 더 똑똑하게 만들고, 포인트를 쌓아 실제 보상으로 이어집니다.
+          </p>
+
+          <div className="mt-8 flex justify-center gap-4">
+            <a
+              href="#reward"
+              className="rounded-xl bg-[#7c3aed] px-6 py-3 font-bold text-white shadow-lg shadow-purple-200 hover:bg-[#6d28d9]"
+            >
+              보상 확인하고 시작하기
+            </a>
+            <p className="mt-4 text-sm text-slate-500">
+              TrainAI 앱은 현재 출시 준비 중입니다.
+            </p>
+          </div>
         </div>
       </section>
 
