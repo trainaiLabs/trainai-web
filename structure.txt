@@ -52,9 +52,15 @@ C:\TRAINAI-WEB\APP
 ¦¢  ¦¦¦¡login
 ¦¢          page.tsx
 ¦¢          
+¦§¦¡privacy
+¦¢      page.tsx
+¦¢      
 ¦§¦¡recover-password
 ¦¢      page.tsx
 ¦¢      
-¦¦¦¡reset-password
+¦§¦¡reset-password
+¦¢      page.tsx
+¦¢      
+¦¦¦¡terms
         page.tsx
         
