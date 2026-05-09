@@ -127,6 +127,12 @@ export default function ProtectedAdminLayout({
       roles: ['super_admin', 'finance'],
     },
     {
+      name: '수익집계',
+      href: '/admin/revenue',
+      icon: BadgeDollarSign,
+      roles: ['super_admin', 'finance'],
+    },
+    {
       name: '광고관리',
       href: '/admin/monetization',
       icon: BadgeDollarSign,
