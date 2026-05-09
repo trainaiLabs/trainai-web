@@ -8,6 +8,22 @@ import {
   getRevenueSummary,
 } from '@/lib/admin/revenue'
 
+function formatNumber(value: number | string | null | undefined) {
+  return Number(value ?? 0).toLocaleString('ko-KR')
+}
+
+function getProfitTextClass(value: number) {
+  if (value > 0) {
+    return 'text-green-600'
+  }
+
+  if (value < 0) {
+    return 'text-red-600'
+  }
+
+  return 'text-zinc-500'
+}
+
 type BreakdownRow = {
   period: string
   paid_points: number
@@ -121,7 +137,7 @@ export default function AdminRevenuePage() {
         </div>
       </section>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-5">
         <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
           <div className="text-sm text-zinc-500">
             현재 접속 유저
@@ -134,11 +150,21 @@ export default function AdminRevenuePage() {
 
         <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
           <div className="text-sm text-zinc-500">
+            총 보유 포인트
+          </div>
+
+          <div className="mt-2 text-3xl font-black">
+            {formatNumber(summary?.total_user_points)} P
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div className="text-sm text-zinc-500">
             총 지급 포인트
           </div>
 
           <div className="mt-2 text-3xl font-black">
-            {summary?.total_paid_points ?? 0}
+            {formatNumber(summary?.total_paid_points)} P
           </div>
         </div>
 
@@ -148,7 +174,7 @@ export default function AdminRevenuePage() {
           </div>
 
           <div className="mt-2 text-3xl font-black">
-            {summary?.total_estimated_revenue ?? 0}
+            {formatNumber(summary?.total_estimated_revenue)} 원
           </div>
         </div>
 
@@ -157,8 +183,12 @@ export default function AdminRevenuePage() {
             예상 차익
           </div>
 
-          <div className="mt-2 text-3xl font-black">
-            {summary?.total_profit ?? 0}
+          <div
+            className={`mt-2 text-3xl font-black ${getProfitTextClass(
+                Number(summary?.total_profit ?? 0),
+            )}`}
+          >
+            {formatNumber(summary?.total_profit)} 원
           </div>
         </div>
       </div>
@@ -214,7 +244,7 @@ export default function AdminRevenuePage() {
                     </td>
 
                     <td className="px-4 py-3">
-                      {row.paid_points}
+                      {formatNumber(row.paid_points)} P
                     </td>
 
                     <td className="px-4 py-3">
@@ -222,11 +252,15 @@ export default function AdminRevenuePage() {
                     </td>
 
                     <td className="px-4 py-3">
-                      {row.estimated_revenue}
+                      {formatNumber(row.estimated_revenue)} 원
                     </td>
 
-                    <td className="px-4 py-3 font-bold">
-                      {row.profit}
+                    <td
+                        className={`px-4 py-3 font-bold ${getProfitTextClass(
+                            Number(row.profit ?? 0),
+                        )}`}
+                    >
+                      {formatNumber(row.profit)} 원
                     </td>
                   </tr>
                 ))
