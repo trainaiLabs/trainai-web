@@ -10,6 +10,7 @@ import {
   BarChart3,
   Megaphone,
   Users,
+  UserX,
   Wallet,
   BadgeDollarSign,
   MessageCircle,
@@ -137,6 +138,12 @@ export default function ProtectedAdminLayout({
       href: '/admin/monetization',
       icon: BadgeDollarSign,
       roles: ['super_admin'],
+    },
+    {
+      name: '탈퇴요청',
+      href: '/admin/account-delete-requests',
+      icon: UserX,
+      roles: ['super_admin', 'support_admin'],
     },
     {
       name: '고객문의관리',

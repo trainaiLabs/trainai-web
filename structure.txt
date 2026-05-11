@@ -37,6 +37,9 @@ C:\TRAINAI-WEB\APP
 ¦¢  ¦¢  ¦¢  ¦¦¦¡[projectId]
 ¦¢  ¦¢  ¦¢          page.tsx
 ¦¢  ¦¢  ¦¢          
+¦¢  ¦¢  ¦§¦¡revenue
+¦¢  ¦¢  ¦¢      page.tsx
+¦¢  ¦¢  ¦¢      
 ¦¢  ¦¢  ¦§¦¡support-tickets
 ¦¢  ¦¢  ¦¢      page.tsx
 ¦¢  ¦¢  ¦¢      
