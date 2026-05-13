@@ -89,6 +89,23 @@ export default function ResetPasswordPage() {
             {message}
           </p>
         )}
+        {sent && (
+          <>
+            <p style={styles.guideText}>
+              메일을 확인한 뒤 앱으로 돌아가 비밀번호를 재설정해주세요.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = 'trainai://';
+              }}
+              style={styles.backToAppButton}
+            >
+              앱으로 돌아가기
+            </button>
+          </>
+        )}
       </section>
     </main>
   );
@@ -150,5 +167,23 @@ const styles: Record<string, React.CSSProperties> = {
   message: {
     marginTop: 16,
     fontSize: 14,
+  },
+  guideText: {
+    marginTop: 14,
+    fontSize: 13,
+    color: '#6b7280',
+    lineHeight: 1.5,
+  },
+  backToAppButton: {
+    width: '100%',
+    height: 48,
+    borderRadius: 14,
+    border: '1px solid #ddd6fe',
+    background: '#faf5ff',
+    color: '#7e22ce',
+    fontSize: 15,
+    fontWeight: 800,
+    cursor: 'pointer',
+    marginTop: 12,
   },
 };

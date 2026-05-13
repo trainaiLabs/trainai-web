@@ -10,6 +10,9 @@ C:\TRAINAI-WEB\APP
 ¦¢  ¦§¦¡(protected)
 ¦¢  ¦¢  ¦¢  layout.tsx
 ¦¢  ¦¢  ¦¢  
+¦¢  ¦¢  ¦§¦¡account-delete-requests
+¦¢  ¦¢  ¦¢      page.tsx
+¦¢  ¦¢  ¦¢      
 ¦¢  ¦¢  ¦§¦¡accounts
 ¦¢  ¦¢  ¦¢      page.tsx
 ¦¢  ¦¢  ¦¢      
