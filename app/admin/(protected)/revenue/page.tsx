@@ -83,8 +83,7 @@ export default function AdminRevenuePage() {
     try {
       setLoading(true)
 
-      const { error } = await supabase.functions.invoke(
-        
+      const result = await supabase.functions.invoke(
         'sync-admob-revenue',
         {
           body: {
@@ -93,15 +92,17 @@ export default function AdminRevenuePage() {
         },
       )
 
-      if (error) {
-        throw error
+      console.log('sync result:', result)
+
+      if (result.error) {
+        throw result.error
       }
 
       alert('AdMob 수익 동기화 완료')
-    } catch (e) {
-      console.error(e)
-      alert('AdMob 수익 동기화 실패')
-    } finally {
+      }  catch (e) {
+        console.error('sync error:', e)
+        alert(`AdMob 수익 동기화 실패\n${JSON.stringify(e)}`)
+      } finally {
       setLoading(false)
     }
   }
