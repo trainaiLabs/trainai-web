@@ -177,7 +177,7 @@ export default function AdminRevenuePage() {
         </div>
       </section>
 
-      <div className="grid gap-4 md:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
           <div className="text-sm text-zinc-500">
             현재 접속 유저
@@ -231,6 +231,45 @@ export default function AdminRevenuePage() {
             {formatNumber(summary?.total_profit)} 원
           </div>
         </div>
+                <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div className="text-sm text-zinc-500">
+            광고 시청 수
+          </div>
+
+          <div className="mt-2 text-3xl font-black">
+            {formatNumber(summary?.total_ad_count)} 회
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div className="text-sm text-zinc-500">
+            광고 1회당 평균 수익
+          </div>
+
+          <div className="mt-2 text-3xl font-black">
+            {formatNumber(summary?.revenue_per_ad)} 원
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div className="text-sm text-zinc-500">
+            예상 차익률
+          </div>
+
+          <div className="mt-2 text-3xl font-black">
+            {formatNumber(summary?.profit_margin)}%
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div className="text-sm text-zinc-500">
+            포인트 부채 부담률
+          </div>
+
+          <div className="mt-2 text-3xl font-black text-red-600">
+            {formatNumber(summary?.point_liability_ratio)}%
+          </div>
+        </div>
       </div>
 
       <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
@@ -239,18 +278,12 @@ export default function AdminRevenuePage() {
             <thead>
               <tr className="border-b border-zinc-200 text-left">
                 <th className="px-4 py-3">기간</th>
-                <th className="px-4 py-3">
-                  지급 포인트
-                </th>
-                <th className="px-4 py-3">
-                  광고 수
-                </th>
-                <th className="px-4 py-3">
-                  예상 광고 수익
-                </th>
-                <th className="px-4 py-3">
-                  차익
-                </th>
+                <th className="px-4 py-3">지급 포인트</th>
+                <th className="px-4 py-3">광고 수</th>
+                <th className="px-4 py-3">예상 광고 수익</th>
+                <th className="px-4 py-3">차익</th>
+                <th className="px-4 py-3 text-left">광고 1회당 수익</th>
+                <th className="px-4 py-3 text-left">차익률</th>
               </tr>
             </thead>
 
@@ -302,6 +335,18 @@ export default function AdminRevenuePage() {
                     >
                       {formatNumber(row.profit)} 원
                     </td>
+
+                    <td className="px-4 py-3">
+                      {row.ad_count > 0
+                      ? `${formatNumber(row.estimated_revenue / row.ad_count)} 원`
+                      : '0 원'}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      {row.estimated_revenue > 0
+                      ? `${formatNumber((row.profit / row.estimated_revenue) * 100)}%`
+                      : '0%'}
+                    </td>                    
                   </tr>
                 ))
               )}
