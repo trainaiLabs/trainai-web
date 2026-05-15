@@ -84,6 +84,7 @@ export default function AdminRevenuePage() {
       setLoading(true)
 
       const { error } = await supabase.functions.invoke(
+        
         'sync-admob-revenue',
         {
           body: {
@@ -96,8 +97,6 @@ export default function AdminRevenuePage() {
         throw error
       }
 
-      await loadData()
-
       alert('AdMob 수익 동기화 완료')
     } catch (e) {
       console.error(e)
@@ -105,6 +104,11 @@ export default function AdminRevenuePage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  async function handleRefresh() {
+    await syncAdmobRevenue()
+    await loadData()
   }
 
   useEffect(() => {
@@ -159,19 +163,10 @@ export default function AdminRevenuePage() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={loadData}
+              onClick={handleRefresh}
               className="rounded-lg bg-black px-4 py-2 text-white"
             >
               조회
-            </button>
-
-            <button
-              type="button"
-              onClick={syncAdmobRevenue}
-              disabled={loading}
-              className="rounded-lg bg-violet-600 px-4 py-2 text-white hover:bg-violet-700 disabled:opacity-50"
-            >
-              AdMob 수익 동기화
             </button>
           </div>
         </div>
