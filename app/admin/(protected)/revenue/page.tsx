@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase/client'
 
 import {
   getOnlineUserCount,
@@ -78,6 +79,34 @@ export default function AdminRevenuePage() {
     }
   }
 
+  async function syncAdmobRevenue() {
+    try {
+      setLoading(true)
+
+      const { error } = await supabase.functions.invoke(
+        'sync-admob-revenue',
+        {
+          body: {
+            date: endDate,
+          },
+        },
+      )
+
+      if (error) {
+        throw error
+      }
+
+      await loadData()
+
+      alert('AdMob 수익 동기화 완료')
+    } catch (e) {
+      console.error(e)
+      alert('AdMob 수익 동기화 실패')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     loadData()
   }, [])
@@ -127,13 +156,24 @@ export default function AdminRevenuePage() {
             <option value="month">월별</option>
           </select>
 
-          <button
-            type="button"
-            onClick={loadData}
-            className="rounded-lg bg-black px-4 py-2 text-white"
-          >
-            조회
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={loadData}
+              className="rounded-lg bg-black px-4 py-2 text-white"
+            >
+              조회
+            </button>
+
+            <button
+              type="button"
+              onClick={syncAdmobRevenue}
+              disabled={loading}
+              className="rounded-lg bg-violet-600 px-4 py-2 text-white hover:bg-violet-700 disabled:opacity-50"
+            >
+              AdMob 수익 동기화
+            </button>
+          </div>
         </div>
       </section>
 
