@@ -7,6 +7,7 @@ import {
   getOnlineUserCount,
   getRevenueBreakdown,
   getRevenueSummary,
+  syncAdmobRevenueRange,
 } from '@/lib/admin/revenue'
 
 function formatNumber(value: number | string | null | undefined) {
@@ -80,32 +81,22 @@ export default function AdminRevenuePage() {
   }
 
   async function syncAdmobRevenue() {
-    try {
-      setLoading(true)
+  try {
+    setLoading(true)
 
-      const result = await supabase.functions.invoke(
-        'sync-admob-revenue',
-        {
-          body: {
-            date: endDate,
-          },
-        },
-      )
+    await syncAdmobRevenueRange(
+      startDate,
+      endDate,
+    )
 
-      console.log('sync result:', result)
-
-      if (result.error) {
-        throw result.error
-      }
-
-      alert('AdMob 수익 동기화 완료')
-      }  catch (e) {
-        console.error('sync error:', e)
-        alert(`AdMob 수익 동기화 실패\n${JSON.stringify(e)}`)
-      } finally {
-      setLoading(false)
-    }
+    alert('AdMob 수익 동기화 완료')
+  } catch (e) {
+    console.error('sync error:', e)
+    alert(`AdMob 수익 동기화 실패\n${JSON.stringify(e)}`)
+  } finally {
+    setLoading(false)
   }
+}
 
   async function handleRefresh() {
     await syncAdmobRevenue()

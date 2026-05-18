@@ -42,3 +42,26 @@ export async function getOnlineUserCount() {
   if (error) throw error
   return data ?? 0
 }
+
+export async function syncAdmobRevenueRange(
+  startDate: string,
+  endDate: string,
+) {
+  const current = new Date(startDate)
+  const end = new Date(endDate)
+
+  while (current <= end) {
+    const date = current.toISOString().slice(0, 10)
+
+    const { error } = await supabase.functions.invoke(
+      'sync-admob-revenue',
+      {
+        body: { date },
+      },
+    )
+
+    if (error) throw error
+
+    current.setDate(current.getDate() + 1)
+  }
+}
