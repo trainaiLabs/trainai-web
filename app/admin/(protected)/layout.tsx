@@ -15,6 +15,7 @@ import {
   BadgeDollarSign,
   MessageCircle,
   FileText,
+  ShieldAlert,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -114,6 +115,12 @@ export default function ProtectedAdminLayout({
       href: '/admin/users',
       icon: Users,
       roles: ['super_admin'], // ✅ 수정
+    },
+    {
+      name: '답변검수',
+      href: '/admin/task-answer-moderation',
+      icon: ShieldAlert,
+      roles: ['super_admin', 'reviewer', 'support_admin'],
     },
     {
       name: '관리자 로그',
