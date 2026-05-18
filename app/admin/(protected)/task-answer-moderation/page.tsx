@@ -218,7 +218,7 @@ export default function TaskAnswerModerationPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">답변 검수</h1>
         <p className="mt-2 text-sm text-gray-500">
@@ -253,7 +253,7 @@ export default function TaskAnswerModerationPage() {
 
       {tab === 'answers' && (
         <>
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="grid gap-4 md:grid-cols-[1fr_160px]">
               <div>
                 <label className="mb-2 block text-sm font-bold text-gray-900">
@@ -303,7 +303,7 @@ export default function TaskAnswerModerationPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-bold text-gray-900">답변 목록</h2>
               <span className="text-sm text-gray-500">총 {answers.length}개</span>
@@ -318,28 +318,28 @@ export default function TaskAnswerModerationPage() {
                 검색된 답변이 없습니다.
               </p>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {answers.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-xl border border-gray-200 bg-white p-4"
+                    className="rounded-2xl border border-gray-200 bg-white p-5"
                   >
                     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                       <div className="space-y-2">
                         <div className="flex flex-wrap gap-2">
                           <span
-                            className={`rounded-full border px-3 py-1 text-xs font-bold ${statusClass(
+                            className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${statusClass(
                               item.moderation_status,
                             )}`}
                           >
                             {statusLabel(item.moderation_status)}
                           </span>
 
-                          <span className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-bold text-gray-600">
+                          <span className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-xs font-bold text-gray-600">
                             {reasonLabel(item.moderation_reason)}
                           </span>
 
-                          <span className="rounded-full border border-purple-100 bg-purple-50 px-3 py-1 text-xs font-bold text-purple-700">
+                          <span className="rounded-full border border-purple-100 bg-purple-50 px-2.5 py-0.5 text-xs font-bold text-purple-700">
                             선택 {item.selected_count ?? 0}
                           </span>
                         </div>
@@ -356,26 +356,26 @@ export default function TaskAnswerModerationPage() {
                         <button
                           onClick={() => approveAnswer(item.id)}
                           disabled={actionLoadingId === item.id}
-                          className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-bold hover:bg-gray-50 disabled:text-gray-400"
+                          className="rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-sm font-bold hover:bg-gray-50 disabled:text-gray-400"
                         >
                           승인
                         </button>
                         <button
                           onClick={() => rejectAnswer(item.id)}
                           disabled={actionLoadingId === item.id}
-                          className="rounded-xl bg-black px-4 py-2 text-sm font-bold text-white disabled:bg-gray-300"
+                          className="rounded-xl bg-black px-3 py-1.5 text-sm font-bold text-white disabled:bg-gray-300"
                         >
                           거절
                         </button>
                       </div>
                     </div>
 
-                    <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm leading-6 text-gray-800 whitespace-pre-wrap">
+                    <div className="mt-3 rounded-2xl bg-gray-50 p-3 text-sm leading-6 text-gray-800 whitespace-pre-wrap">
                       {item.answer_text}
                     </div>
 
                     {item.prompt_text && (
-                      <div className="mt-4 rounded-xl border border-gray-200 p-4 text-sm text-gray-700">
+                      <div className="mt-3 rounded-2xl border border-gray-200 p-3 text-sm text-gray-700">
                         <p className="mb-2 font-bold text-gray-900">문제</p>
                         <p className="whitespace-pre-wrap">{item.prompt_text}</p>
                       </div>
@@ -452,7 +452,7 @@ export default function TaskAnswerModerationPage() {
 
                     <div className="flex items-center gap-2">
                       <span
-                        className={`rounded-full border px-3 py-1 text-xs font-bold ${
+                        className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${
                           item.is_active
                             ? 'border-green-200 bg-green-50 text-green-700'
                             : 'border-gray-200 bg-gray-50 text-gray-500'
