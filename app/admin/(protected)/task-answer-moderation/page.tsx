@@ -19,6 +19,8 @@ type TaskAnswer = {
   created_at: string
   updated_at: string
   prompt_text: string | null
+  context_text: string | null
+  payload: any
 }
 
 type ModerationKeyword = {
@@ -79,6 +81,45 @@ function statusClass(status: string) {
     default:
       return 'border-gray-200 bg-gray-50 text-gray-600'
   }
+}
+
+function extractQuestion(item: TaskAnswer) {
+  const payload = item.payload
+
+  if (payload && typeof payload === 'object') {
+    const input = payload.input
+
+    if (input && typeof input === 'object') {
+      if (typeof input.text === 'string' && input.text.trim()) {
+        return input.text
+      }
+
+      if (
+        typeof input.source_text === 'string' &&
+        input.source_text.trim()
+      ) {
+        return input.source_text
+      }
+    }
+
+    if (typeof payload.input_text === 'string' && payload.input_text.trim()) {
+      return payload.input_text
+    }
+
+    if (typeof payload.text === 'string' && payload.text.trim()) {
+      return payload.text
+    }
+
+    if (typeof payload.question === 'string' && payload.question.trim()) {
+      return payload.question
+    }
+  }
+
+  if (item.context_text && item.context_text.trim()) {
+    return item.context_text
+  }
+
+  return '질문 없음'
 }
 
 export default function TaskAnswerModerationPage() {
@@ -377,7 +418,7 @@ export default function TaskAnswerModerationPage() {
                     {item.prompt_text && (
                       <div className="mt-3 rounded-2xl border border-gray-200 p-3 text-sm text-gray-700">
                         <p className="mb-2 font-bold text-gray-900">문제</p>
-                        <p className="whitespace-pre-wrap">{item.prompt_text}</p>
+                        <p className="whitespace-pre-wrap">{extractQuestion(item)}</p>
                       </div>
                     )}
                   </div>
