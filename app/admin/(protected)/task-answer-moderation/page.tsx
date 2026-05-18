@@ -83,10 +83,8 @@ function statusClass(status: string) {
 
 export default function TaskAnswerModerationPage() {
   const [tab, setTab] = useState<Tab>('answers')
-
   const [answers, setAnswers] = useState<TaskAnswer[]>([])
   const [keywords, setKeywords] = useState<ModerationKeyword[]>([])
-
   const [loadingAnswers, setLoadingAnswers] = useState(false)
   const [loadingKeywords, setLoadingKeywords] = useState(false)
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null)
@@ -220,22 +218,22 @@ export default function TaskAnswerModerationPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">답변 검수</h1>
+        <h1 className="text-2xl font-bold text-gray-900">답변 검수</h1>
         <p className="mt-2 text-sm text-gray-500">
           유저가 작성한 답변을 검수하고 금칙어를 관리합니다.
         </p>
       </div>
 
-      <div className="rounded-2xl border bg-white p-4 shadow-sm">
+      <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setTab('answers')}
             className={`rounded-xl px-4 py-2 text-sm font-bold ${
               tab === 'answers'
                 ? 'bg-black text-white'
-                : 'border bg-white text-gray-700'
+                : 'border border-gray-200 bg-white text-gray-700'
             }`}
           >
             답변 검수
@@ -245,7 +243,7 @@ export default function TaskAnswerModerationPage() {
             className={`rounded-xl px-4 py-2 text-sm font-bold ${
               tab === 'keywords'
                 ? 'bg-black text-white'
-                : 'border bg-white text-gray-700'
+                : 'border border-gray-200 bg-white text-gray-700'
             }`}
           >
             금칙어 관리
@@ -255,24 +253,28 @@ export default function TaskAnswerModerationPage() {
 
       {tab === 'answers' && (
         <>
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
             <div className="grid gap-4 md:grid-cols-[1fr_160px]">
               <div>
-                <label className="mb-2 block text-sm font-bold">검색</label>
+                <label className="mb-2 block text-sm font-bold text-gray-900">
+                  검색
+                </label>
                 <input
                   value={keywordFilter}
                   onChange={(e) => setKeywordFilter(e.target.value)}
                   placeholder="답변 내용 또는 문제 검색"
-                  className="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-black"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-black"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold">상태</label>
+                <label className="mb-2 block text-sm font-bold text-gray-900">
+                  상태
+                </label>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-black"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-black"
                 >
                   <option value="all">전체</option>
                   <option value="visible">노출중</option>
@@ -288,22 +290,22 @@ export default function TaskAnswerModerationPage() {
                 value={userIdFilter}
                 onChange={(e) => setUserIdFilter(e.target.value)}
                 placeholder="user_id 검색"
-                className="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-black"
+                className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-black"
               />
 
               <button
                 onClick={loadAnswers}
                 disabled={loadingAnswers}
-                className="rounded-xl border bg-white px-4 py-3 text-sm font-bold hover:bg-gray-50 disabled:text-gray-400"
+                className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-bold hover:bg-gray-50 disabled:text-gray-400"
               >
                 {loadingAnswers ? '검색중' : '새로고침'}
               </button>
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold">답변 목록</h2>
+              <h2 className="text-lg font-bold text-gray-900">답변 목록</h2>
               <span className="text-sm text-gray-500">총 {answers.length}개</span>
             </div>
 
@@ -318,7 +320,10 @@ export default function TaskAnswerModerationPage() {
             ) : (
               <div className="space-y-4">
                 {answers.map((item) => (
-                  <div key={item.id} className="rounded-xl border p-4">
+                  <div
+                    key={item.id}
+                    className="rounded-xl border border-gray-200 bg-white p-4"
+                  >
                     <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                       <div className="space-y-2">
                         <div className="flex flex-wrap gap-2">
@@ -330,11 +335,11 @@ export default function TaskAnswerModerationPage() {
                             {statusLabel(item.moderation_status)}
                           </span>
 
-                          <span className="rounded-full border bg-gray-50 px-3 py-1 text-xs font-bold text-gray-600">
+                          <span className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-bold text-gray-600">
                             {reasonLabel(item.moderation_reason)}
                           </span>
 
-                          <span className="rounded-full border bg-purple-50 px-3 py-1 text-xs font-bold text-purple-700">
+                          <span className="rounded-full border border-purple-100 bg-purple-50 px-3 py-1 text-xs font-bold text-purple-700">
                             선택 {item.selected_count ?? 0}
                           </span>
                         </div>
@@ -351,7 +356,7 @@ export default function TaskAnswerModerationPage() {
                         <button
                           onClick={() => approveAnswer(item.id)}
                           disabled={actionLoadingId === item.id}
-                          className="rounded-xl border px-4 py-2 text-sm font-bold hover:bg-gray-50 disabled:text-gray-400"
+                          className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-bold hover:bg-gray-50 disabled:text-gray-400"
                         >
                           승인
                         </button>
@@ -365,13 +370,13 @@ export default function TaskAnswerModerationPage() {
                       </div>
                     </div>
 
-                    <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm leading-6 whitespace-pre-wrap">
+                    <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm leading-6 text-gray-800 whitespace-pre-wrap">
                       {item.answer_text}
                     </div>
 
                     {item.prompt_text && (
-                      <div className="mt-4 rounded-xl border p-4 text-sm text-gray-700">
-                        <p className="mb-2 font-bold">문제</p>
+                      <div className="mt-4 rounded-xl border border-gray-200 p-4 text-sm text-gray-700">
+                        <p className="mb-2 font-bold text-gray-900">문제</p>
                         <p className="whitespace-pre-wrap">{item.prompt_text}</p>
                       </div>
                     )}
@@ -385,21 +390,21 @@ export default function TaskAnswerModerationPage() {
 
       {tab === 'keywords' && (
         <>
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-bold">새 금칙어 추가</h2>
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-bold text-gray-900">새 금칙어 추가</h2>
 
             <div className="mt-4 grid gap-3 md:grid-cols-[1fr_160px_120px]">
               <input
                 value={newKeyword}
                 onChange={(e) => setNewKeyword(e.target.value)}
                 placeholder="차단할 단어 입력"
-                className="rounded-xl border px-4 py-3 text-sm outline-none focus:border-black"
+                className="rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-black"
               />
 
               <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
-                className="rounded-xl border px-4 py-3 text-sm outline-none focus:border-black"
+                className="rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-black"
               >
                 <option value="profanity">욕설</option>
                 <option value="sexual">선정적 표현</option>
@@ -415,9 +420,9 @@ export default function TaskAnswerModerationPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold">금칙어 목록</h2>
+              <h2 className="text-lg font-bold text-gray-900">금칙어 목록</h2>
               <span className="text-sm text-gray-500">
                 총 {keywords.length}개
               </span>
@@ -436,10 +441,10 @@ export default function TaskAnswerModerationPage() {
                 {keywords.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between rounded-xl border p-4"
+                    className="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4"
                   >
                     <div>
-                      <p className="font-bold">{item.keyword}</p>
+                      <p className="font-bold text-gray-900">{item.keyword}</p>
                       <p className="mt-1 text-sm text-gray-500">
                         {reasonLabel(item.category)} · {formatDate(item.created_at)}
                       </p>
@@ -458,7 +463,7 @@ export default function TaskAnswerModerationPage() {
 
                       <button
                         onClick={() => toggleKeyword(item)}
-                        className="rounded-xl border px-3 py-2 text-xs font-bold hover:bg-gray-50"
+                        className="rounded-xl border border-gray-200 px-3 py-2 text-xs font-bold hover:bg-gray-50"
                       >
                         {item.is_active ? '비활성' : '활성'}
                       </button>
