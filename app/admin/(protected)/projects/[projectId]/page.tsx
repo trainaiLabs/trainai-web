@@ -200,7 +200,7 @@ export default function ProjectDetailPage() {
     const evaluationCriteria = String(project['evaluation_criteria'] ?? 'other')
     const rewardPoints = Number(project['reward_per_task'] ?? 0)
 
-    const { error } = await supabase.rpc('admin_insert_preference_tasks', {
+    const { data, error } = await supabase.rpc('admin_insert_preference_tasks', {
       p_project_id: projectId,
       p_rows: parsedRows,
       p_task_type: taskType,
@@ -215,7 +215,48 @@ export default function ProjectDetailPage() {
       return
     }
 
-    setSuccessText(`CSV 업로드 완료 (${parsedRows.length}개 task 추가)`)
+    const result = data as {
+      success?: boolean
+      inserted_count?: number
+      skipped_count?: number
+      db_skipped_count?: number
+      file_duplicate_count?: number
+      empty_skipped_count?: number
+      target_task_count?: number
+    }
+
+    const insertedCount = Number(result?.inserted_count ?? 0)
+    const skippedCount = Number(result?.skipped_count ?? 0)
+
+    const dbSkippedCount = Number(result?.db_skipped_count ?? 0)
+
+    const fileDuplicateCount = Number(
+      result?.file_duplicate_count ?? 0
+    )
+
+    const emptySkippedCount = Number(
+      result?.empty_skipped_count ?? 0
+    )
+
+    const targetTaskCount = Number(
+      result?.target_task_count ?? 0
+    )
+
+    setSuccessText(
+      [
+        'CSV 업로드 완료',
+        '',
+        `등록 완료: ${insertedCount}개`,
+        `기존 DB 중복 제외: ${dbSkippedCount}개`,
+        `업로드 파일 중복 제외: ${fileDuplicateCount}개`,
+        `빈 질문 제외: ${emptySkippedCount}개`,
+        '',
+        `현재 프로젝트 총 퀘스트: ${targetTaskCount}개`,
+      ].join('\n')
+    )
+
+    await loadProject()
+
     setSelectedFileName('')
     setParsedRows([])
     setHeaders([])
@@ -316,7 +357,7 @@ export default function ProjectDetailPage() {
       default:
         return 'other'
     }
-  } 
+  }
 
   const buildTrainingPrompt = (row: Record<string, any>) => {
     const instruction = String(row['instruction'] ?? '').trim()
@@ -381,7 +422,7 @@ export default function ProjectDetailPage() {
 
       if (type === 'delivery') {
         const { data, error } = await supabase.rpc(
-          'admin_export_project_results_delivery', 
+          'admin_export_project_results_delivery',
           { p_project_id: projectId }
         )
 
@@ -592,38 +633,38 @@ export default function ProjectDetailPage() {
           </div>
         </div>
         <div>
-            <div className="text-zinc-500">현재 task 수</div>
-            <div className="font-medium text-zinc-900">
-                {String(project['completed_task_count'] ?? 0)}
-            </div>
+          <div className="text-zinc-500">현재 task 수</div>
+          <div className="font-medium text-zinc-900">
+            {String(project['completed_task_count'] ?? 0)}
+          </div>
         </div>
         <div className="mt-4 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
           자동 적용 문구: <span className="font-medium">{instructionText}</span>
         </div>
         <div className="mt-4">
-        {(() => {
+          {(() => {
             const completed = Number(project['completed_task_count'] ?? 0)
             const target = Number(project['target_task_count'] ?? 0)
             const percent =
-            !target || target <= 0
+              !target || target <= 0
                 ? 0
                 : Math.min(100, Math.round((completed / target) * 100))
 
             return (
-                <div>
-                    <div className="mb-2 text-sm text-zinc-600">
-                        진행률: <span className="font-medium text-zinc-900">{percent}%</span>
-                    </div>
-                    <div className="h-3 w-full rounded-full bg-zinc-200 overflow-hidden">
-                        <div
-                            className="h-3 rounded-full bg-black"
-                            style={{ width: `${percent}%` }}
-                        />
-                    </div>
+              <div>
+                <div className="mb-2 text-sm text-zinc-600">
+                  진행률: <span className="font-medium text-zinc-900">{percent}%</span>
                 </div>
+                <div className="h-3 w-full rounded-full bg-zinc-200 overflow-hidden">
+                  <div
+                    className="h-3 rounded-full bg-black"
+                    style={{ width: `${percent}%` }}
+                  />
+                </div>
+              </div>
             )
-        })()}
-      </div>
+          })()}
+        </div>
 
       </div>
 
