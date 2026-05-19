@@ -226,7 +226,7 @@ export default function ProjectDetailPage() {
     }
 
     const insertedCount = Number(result?.inserted_count ?? 0)
-    const skippedCount = Number(result?.skipped_count ?? 0)
+    //const skippedCount = Number(result?.skipped_count ?? 0)
 
     const dbSkippedCount = Number(result?.db_skipped_count ?? 0)
 
@@ -716,7 +716,7 @@ export default function ProjectDetailPage() {
         )}
 
         {successText && (
-          <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+          <div className="mt-4 whitespace-pre-line rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
             {successText}
           </div>
         )}
