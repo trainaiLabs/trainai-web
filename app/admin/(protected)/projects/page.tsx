@@ -47,7 +47,7 @@ export default function ProjectsPage() {
 
     checkRole()
   }, [router])
-  
+
   const [useExistingProject, setUseExistingProject] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState('')
   const [form, setForm] = useState<ProjectForm>(initialForm)
@@ -146,7 +146,7 @@ export default function ProjectsPage() {
     setStatusDrafts(nextDrafts)
 
     setProjectsLoading(false)
-    
+
   }
   useEffect(() => {
     loadProjects()
@@ -294,7 +294,7 @@ export default function ProjectsPage() {
       ? Number(selectedProject?.['reward_per_task'] ?? 0)
       : Number(form.rewardPerTask)
 
-    const { error: insertError } = await supabase.rpc(
+    const { data: insertData, error: insertError } = await supabase.rpc(
       'admin_insert_preference_tasks',
       {
         p_project_id: projectId,
@@ -313,10 +313,34 @@ export default function ProjectsPage() {
       return
     }
 
+    const insertResult = insertData as {
+      success?: boolean
+      inserted_count?: number
+      db_skipped_count?: number
+      file_duplicate_count?: number
+      empty_skipped_count?: number
+      target_task_count?: number
+    } | null
+
+    const insertedCount = Number(insertResult?.inserted_count ?? 0)
+    const dbSkippedCount = Number(insertResult?.db_skipped_count ?? 0)
+    const fileDuplicateCount = Number(insertResult?.file_duplicate_count ?? 0)
+    const emptySkippedCount = Number(insertResult?.empty_skipped_count ?? 0)
+    const targetTaskCount = Number(insertResult?.target_task_count ?? 0)
+
     setSuccessText(
-      useExistingProject
-        ? `기존 프로젝트에 CSV 업로드 완료 (${parsedRows.length}개 task)`
-        : `프로젝트 생성 및 CSV 업로드 완료 (${parsedRows.length}개 task)`
+      [
+        useExistingProject
+          ? '기존 프로젝트에 CSV 업로드 완료'
+          : '프로젝트 생성 및 CSV 업로드 완료',
+        '',
+        `등록 완료: ${insertedCount}개`,
+        `기존 DB 중복 제외: ${dbSkippedCount}개`,
+        `업로드 파일 중복 제외: ${fileDuplicateCount}개`,
+        `빈 질문 제외: ${emptySkippedCount}개`,
+        '',
+        `현재 프로젝트 총 퀘스트: ${targetTaskCount}개`,
+      ].join('\n')
     )
     setCreatedProjectId(projectId)
     setForm(initialForm)
@@ -334,365 +358,364 @@ export default function ProjectsPage() {
 
   return (
     <AdminGuard allow={['super_admin', 'uploader']}>
-    <div className="max-w-4xl">
-      <h1 className="text-2xl font-bold text-zinc-900 mb-2">프로젝트 생성</h1>
-      <p className="text-zinc-600 mb-6">
-        새 프로젝트를 만들고 CSV 업로드로 task를 넣을 수 있습니다.
-      </p>
+      <div className="max-w-4xl">
+        <h1 className="text-2xl font-bold text-zinc-900 mb-2">프로젝트 생성</h1>
+        <p className="text-zinc-600 mb-6">
+          새 프로젝트를 만들고 CSV 업로드로 task를 넣을 수 있습니다.
+        </p>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-4">
-            <div className="flex flex-col gap-3">
-              <label className="flex items-center gap-2 text-sm text-zinc-700">
-                <input
-                  type="radio"
-                  name="projectMode"
-                  checked={!useExistingProject}
-                  onChange={() => setUseExistingProject(false)}
-                />
-                새 프로젝트 생성 후 CSV 업로드
-              </label>
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-4">
+              <div className="flex flex-col gap-3">
+                <label className="flex items-center gap-2 text-sm text-zinc-700">
+                  <input
+                    type="radio"
+                    name="projectMode"
+                    checked={!useExistingProject}
+                    onChange={() => setUseExistingProject(false)}
+                  />
+                  새 프로젝트 생성 후 CSV 업로드
+                </label>
 
-              <label className="flex items-center gap-2 text-sm text-zinc-700">
-                <input
-                  type="radio"
-                  name="projectMode"
-                  checked={useExistingProject}
-                  onChange={() => setUseExistingProject(true)}
-                />
-                기존 프로젝트 선택 후 CSV 업로드
-              </label>
+                <label className="flex items-center gap-2 text-sm text-zinc-700">
+                  <input
+                    type="radio"
+                    name="projectMode"
+                    checked={useExistingProject}
+                    onChange={() => setUseExistingProject(true)}
+                  />
+                  기존 프로젝트 선택 후 CSV 업로드
+                </label>
 
-              {useExistingProject && (
-                <div className="mt-2">
+                {useExistingProject && (
+                  <div className="mt-2">
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">
+                      업로드할 프로젝트 선택
+                    </label>
+                    <select
+                      value={selectedProjectId}
+                      onChange={(e) => setSelectedProjectId(e.target.value)}
+                      className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
+                    >
+                      <option value="">프로젝트를 선택하세요</option>
+                      {projects.map((project) => (
+                        <option
+                          key={String(project['id'] ?? '')}
+                          value={String(project['id'] ?? '')}
+                        >
+                          {String(project['title'] ?? '')} / {String(project['project_kind'] ?? '')} / {String(project['status'] ?? '')}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {!useExistingProject && (
+              <>
+                <div>
                   <label className="block text-sm font-medium text-zinc-700 mb-1">
-                    업로드할 프로젝트 선택
+                    프로젝트 제목
+                  </label>
+                  <input
+                    type="text"
+                    value={form.title}
+                    onChange={(e) => updateField('title', e.target.value)}
+                    className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
+                    placeholder="예: 자연스러움 선호도 데이터셋"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                    설명
+                  </label>
+                  <textarea
+                    value={form.description}
+                    onChange={(e) => updateField('description', e.target.value)}
+                    className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500 min-h-28"
+                    placeholder="프로젝트 설명을 입력하세요."
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">
+                      프로젝트 종류
+                    </label>
+                    <select
+                      value={form.projectKind}
+                      onChange={(e) => updateField('projectKind', e.target.value)}
+                      className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
+                    >
+                      <option value="client_paid">client_paid / 외부 의뢰</option>
+                      <option value="internal_training">internal_training / 내부 상시</option>
+                      <option value="gold_quality">gold_quality / 품질 평가</option>
+                      <option value="event_campaign">event_campaign / 이벤트</option>
+                      <option value="demo">demo / 운영 테스트</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">
+                      작업 유형
+                    </label>
+                    <select
+                      value={form.taskType}
+                      onChange={(e) => updateField('taskType', e.target.value)}
+                      className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
+                    >
+                      <option value="preference">preference</option>
+                      <option value="accuracy">accuracy</option>
+                      <option value="safety">safety</option>
+                      <option value="translation_preference">translation_preference</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">
+                      작업당 보상 포인트
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={form.rewardPerTask}
+                      onChange={(e) => updateField('rewardPerTask', e.target.value)}
+                      className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">
+                      목표 작업 수
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={form.targetTaskCount}
+                      onChange={(e) => updateField('targetTaskCount', e.target.value)}
+                      className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                    평가 기준
                   </label>
                   <select
-                    value={selectedProjectId}
-                    onChange={(e) => setSelectedProjectId(e.target.value)}
+                    value={form.evaluationCriteria}
+                    onChange={(e) => updateField('evaluationCriteria', e.target.value)}
                     className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
                   >
-                    <option value="">프로젝트를 선택하세요</option>
-                    {projects.map((project) => (
-                      <option
-                        key={String(project['id'] ?? '')}
-                        value={String(project['id'] ?? '')}
-                      >
-                        {String(project['title'] ?? '')} / {String(project['project_kind'] ?? '')} / {String(project['status'] ?? '')}
-                      </option>
-                    ))}
+                    <option value="naturalness">naturalness</option>
+                    <option value="accuracy">accuracy</option>
+                    <option value="helpfulness">helpfulness</option>
+                    <option value="politeness">politeness</option>
+                    <option value="safety">safety</option>
+                    <option value="other">other</option>
                   </select>
                 </div>
-              )}
-            </div>
-          </div>
+              </>
+            )}
 
-          {!useExistingProject && (
-          <>
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">
-              프로젝트 제목
-            </label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => updateField('title', e.target.value)}
-              className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
-              placeholder="예: 자연스러움 선호도 데이터셋"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">
-              설명
-            </label>
-            <textarea
-              value={form.description}
-              onChange={(e) => updateField('description', e.target.value)}
-              className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500 min-h-28"
-              placeholder="프로젝트 설명을 입력하세요."
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                프로젝트 종류
-              </label>
-              <select
-                value={form.projectKind}
-                onChange={(e) => updateField('projectKind', e.target.value)}
-                className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
-              >
-                <option value="client_paid">client_paid / 외부 의뢰</option>
-                <option value="internal_training">internal_training / 내부 상시</option>
-                <option value="gold_quality">gold_quality / 품질 평가</option>
-                <option value="event_campaign">event_campaign / 이벤트</option>
-                <option value="demo">demo / 운영 테스트</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                작업 유형
-              </label>
-              <select
-                value={form.taskType}
-                onChange={(e) => updateField('taskType', e.target.value)}
-                className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
-              >
-                <option value="preference">preference</option>
-                <option value="accuracy">accuracy</option>
-                <option value="safety">safety</option>
-                <option value="translation_preference">translation_preference</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                작업당 보상 포인트
-              </label>
-              <input
-                type="number"
-                min="0"
-                value={form.rewardPerTask}
-                onChange={(e) => updateField('rewardPerTask', e.target.value)}
-                className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                목표 작업 수
-              </label>
-              <input
-                type="number"
-                min="1"
-                value={form.targetTaskCount}
-                onChange={(e) => updateField('targetTaskCount', e.target.value)}
-                className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">
-              평가 기준
-            </label>
-            <select
-              value={form.evaluationCriteria}
-              onChange={(e) => updateField('evaluationCriteria', e.target.value)}
-              className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-zinc-500"
-            >
-              <option value="naturalness">naturalness</option>
-              <option value="accuracy">accuracy</option>
-              <option value="helpfulness">helpfulness</option>
-              <option value="politeness">politeness</option>
-              <option value="safety">safety</option>
-              <option value="other">other</option>
-            </select>
-          </div>
-          </>
-          )}
-
-          <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
-            자동 적용 문구: <span className="font-medium">{instructionText}</span>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
-              CSV 파일 업로드
-            </label>
-
-            <label
-              className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-8 text-center transition ${
-                selectedFileName
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-zinc-300 bg-zinc-50 hover:border-black hover:bg-zinc-100'
-              }`}
-            >
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleCsvFile}
-                className="hidden"
-              />  
-
-              <div className="text-sm font-medium text-zinc-800">
-                CSV 파일 선택
-              </div>
-              <div className="mt-1 text-xs text-zinc-500">
-                클릭해서 업로드
-              </div>
-
-              {selectedFileName && (
-                <div className="mt-4 rounded-lg bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm">
-                  선택 파일: {selectedFileName}
-                </div>
-              )}
-            </label>
-
-            <p className="mt-2 text-xs text-zinc-500">
-              필수 헤더: input_text, option_a, option_b / 선택 헤더: prompt, question, external_key
-            </p>
-          </div>
-
-          {selectedFileName && (
             <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
-              선택 파일: {selectedFileName}
-              {headers.length > 0 && (
+              자동 적용 문구: <span className="font-medium">{instructionText}</span>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 mb-2">
+                CSV 파일 업로드
+              </label>
+
+              <label
+                className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-8 text-center transition ${selectedFileName
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-zinc-300 bg-zinc-50 hover:border-black hover:bg-zinc-100'
+                  }`}
+              >
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleCsvFile}
+                  className="hidden"
+                />
+
+                <div className="text-sm font-medium text-zinc-800">
+                  CSV 파일 선택
+                </div>
                 <div className="mt-1 text-xs text-zinc-500">
-                  헤더: {headers.join(', ')}
+                  클릭해서 업로드
                 </div>
-              )}
-              <div className="mt-1 text-xs text-zinc-500">
-                파싱된 행 수: {parsedRows.length}
+
+                {selectedFileName && (
+                  <div className="mt-4 rounded-lg bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm">
+                    선택 파일: {selectedFileName}
+                  </div>
+                )}
+              </label>
+
+              <p className="mt-2 text-xs text-zinc-500">
+                필수 헤더: input_text, option_a, option_b / 선택 헤더: prompt, question, external_key
+              </p>
+            </div>
+
+            {selectedFileName && (
+              <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
+                선택 파일: {selectedFileName}
+                {headers.length > 0 && (
+                  <div className="mt-1 text-xs text-zinc-500">
+                    헤더: {headers.join(', ')}
+                  </div>
+                )}
+                <div className="mt-1 text-xs text-zinc-500">
+                  파싱된 행 수: {parsedRows.length}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {errorText && (
-            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {errorText}
-            </div>
-          )}
+            {errorText && (
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {errorText}
+              </div>
+            )}
 
-          {successText && (
-            <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-              <div>{successText}</div>
-              {createdProjectId && (
-                <div className="mt-1 text-xs break-all">
-                  project_id: {createdProjectId}
-                </div>
-              )}
-            </div>
-          )}
+            {successText && (
+              <div className="whitespace-pre-line rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                <div>{successText}</div>
+                {createdProjectId && (
+                  <div className="mt-1 text-xs break-all">
+                    project_id: {createdProjectId}
+                  </div>
+                )}
+              </div>
+            )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-xl bg-black px-5 py-3 text-white font-medium hover:bg-zinc-800 disabled:opacity-60"
-          >
-            {loading ? '생성 중...' : '프로젝트 생성'}
-          </button>
-        </form>
-        <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-zinc-900">프로젝트 목록</h2>
             <button
-              type="button"
-              onClick={loadProjects}
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+              type="submit"
+              disabled={loading}
+              className="rounded-xl bg-black px-5 py-3 text-white font-medium hover:bg-zinc-800 disabled:opacity-60"
             >
-              새로고침
-            </button> 
-          </div>
-
-          {projectsLoading ? (
-            <p className="text-zinc-500 text-sm">불러오는 중...</p>
-          ) : projects.length === 0 ? (
-            <p className="text-zinc-500 text-sm">프로젝트가 없습니다.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr className="border-b border-zinc-200 text-left text-zinc-600">
-                    <th className="py-3 pr-4">제목</th>
-                    <th className="py-3 pr-4">상태</th>
-                    <th className="py-3 pr-4">진행률</th>                  
-                    <th className="py-3 pr-4">목표 수</th>
-                    <th className="py-3 pr-4">상태 변경</th>
-                    <th className="py-3 pr-4">상세</th>                                        
-                  </tr>
-                </thead>
-                <tbody>
-                  {projects.map((project, index) => (
-                    <tr
-                      key={String(project['id'] ?? index)}
-                      className="border-b border-zinc-100"
-                    >
-                      <td className="py-3 pr-4 font-medium text-zinc-900">
-                        {String(project['title'] ?? '')}
-                      </td>
-                      <td className="py-3 pr-4 text-zinc-700">
-                        {String(project['status'] ?? '')}
-                      </td>
-                      <td className="py-3 pr-4 text-zinc-700 min-w-[180px]">
-                        {(() => {
-                          const completed = Number(project['completed_task_count'] ?? 0)
-                          const target = Number(project['target_task_count'] ?? 0)
-                          const percent =
-                            !target || target <= 0
-                              ? 0
-                              : Math.min(100, Math.round((completed / target) * 100))
-
-                          return (
-                            <div>
-                              <div className="mb-1 text-xs text-zinc-600">{percent}%</div>
-                              <div className="h-2 w-full rounded-full bg-zinc-200 overflow-hidden">
-                                <div
-                                  className="h-2 rounded-full bg-black"
-                                  style={{ width: `${percent}%` }}
-                                />
-                              </div>
-                            </div>
-                          )
-                        })()}
-                      </td>
-                      <td className="py-3 pr-4 text-zinc-700">
-                        {String(project['target_task_count'] ?? '')}
-                      </td>
-                      <td className="py-3 pr-4 text-zinc-700">
-                        <div className="flex items-center gap-2">
-                          <select
-                            value={statusDrafts[String(project['id'] ?? '')] ?? ''}
-                            onChange={(e) =>
-                              setStatusDrafts((prev) => ({
-                                ...prev,
-                                [String(project['id'] ?? '')]: e.target.value,
-                              }))
-                            }
-                            className="w-40 rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
-                          >
-                            {projectStatusOptions.map((status) => (
-                              <option key={status} value={status}>
-                                {status}
-                              </option>
-                            ))}
-                          </select>
-
-                          <button
-                            type="button"
-                            onClick={() => handleUpdateStatus(String(project['id'] ?? ''))}
-                            disabled={updatingProjectId === String(project['id'] ?? '')}
-                            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm hover:bg-zinc-50 disabled:opacity-60"
-                          >
-                            {updatingProjectId === String(project['id'] ?? '') ? '저장 중...' : '저장'}
-                          </button>
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4">
-                        <a
-                          href={`/admin/projects/${project['id']}`}
-                          className="text-blue-600 underline"
-                        >
-                          상세보기
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {loading ? '생성 중...' : '프로젝트 생성'}
+            </button>
+          </form>
+          <div className="mt-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-zinc-900">프로젝트 목록</h2>
+              <button
+                type="button"
+                onClick={loadProjects}
+                className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+              >
+                새로고침
+              </button>
             </div>
-          )}
+
+            {projectsLoading ? (
+              <p className="text-zinc-500 text-sm">불러오는 중...</p>
+            ) : projects.length === 0 ? (
+              <p className="text-zinc-500 text-sm">프로젝트가 없습니다.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-zinc-200 text-left text-zinc-600">
+                      <th className="py-3 pr-4">제목</th>
+                      <th className="py-3 pr-4">상태</th>
+                      <th className="py-3 pr-4">진행률</th>
+                      <th className="py-3 pr-4">목표 수</th>
+                      <th className="py-3 pr-4">상태 변경</th>
+                      <th className="py-3 pr-4">상세</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {projects.map((project, index) => (
+                      <tr
+                        key={String(project['id'] ?? index)}
+                        className="border-b border-zinc-100"
+                      >
+                        <td className="py-3 pr-4 font-medium text-zinc-900">
+                          {String(project['title'] ?? '')}
+                        </td>
+                        <td className="py-3 pr-4 text-zinc-700">
+                          {String(project['status'] ?? '')}
+                        </td>
+                        <td className="py-3 pr-4 text-zinc-700 min-w-[180px]">
+                          {(() => {
+                            const completed = Number(project['completed_task_count'] ?? 0)
+                            const target = Number(project['target_task_count'] ?? 0)
+                            const percent =
+                              !target || target <= 0
+                                ? 0
+                                : Math.min(100, Math.round((completed / target) * 100))
+
+                            return (
+                              <div>
+                                <div className="mb-1 text-xs text-zinc-600">{percent}%</div>
+                                <div className="h-2 w-full rounded-full bg-zinc-200 overflow-hidden">
+                                  <div
+                                    className="h-2 rounded-full bg-black"
+                                    style={{ width: `${percent}%` }}
+                                  />
+                                </div>
+                              </div>
+                            )
+                          })()}
+                        </td>
+                        <td className="py-3 pr-4 text-zinc-700">
+                          {String(project['target_task_count'] ?? '')}
+                        </td>
+                        <td className="py-3 pr-4 text-zinc-700">
+                          <div className="flex items-center gap-2">
+                            <select
+                              value={statusDrafts[String(project['id'] ?? '')] ?? ''}
+                              onChange={(e) =>
+                                setStatusDrafts((prev) => ({
+                                  ...prev,
+                                  [String(project['id'] ?? '')]: e.target.value,
+                                }))
+                              }
+                              className="w-40 rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+                            >
+                              {projectStatusOptions.map((status) => (
+                                <option key={status} value={status}>
+                                  {status}
+                                </option>
+                              ))}
+                            </select>
+
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateStatus(String(project['id'] ?? ''))}
+                              disabled={updatingProjectId === String(project['id'] ?? '')}
+                              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm hover:bg-zinc-50 disabled:opacity-60"
+                            >
+                              {updatingProjectId === String(project['id'] ?? '') ? '저장 중...' : '저장'}
+                            </button>
+                          </div>
+                        </td>
+                        <td className="py-3 pr-4">
+                          <a
+                            href={`/admin/projects/${project['id']}`}
+                            className="text-blue-600 underline"
+                          >
+                            상세보기
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  </AdminGuard>  
+    </AdminGuard>
   )
 }
