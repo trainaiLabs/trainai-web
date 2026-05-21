@@ -52,6 +52,30 @@ export default function AdminRevenuePage() {
 
   const [rows, setRows] = useState<BreakdownRow[]>([])
 
+  const totals = rows.reduce(
+    (acc, row) => {
+      acc.earned_points += Number(
+        row.earned_points ?? 0,
+      )
+
+      acc.ad_count += Number(row.ad_count ?? 0)
+
+      acc.estimated_revenue += Number(
+        row.estimated_revenue ?? 0,
+      )
+
+      acc.profit += Number(row.profit ?? 0)
+
+      return acc
+    },
+    {
+      earned_points: 0,
+      ad_count: 0,
+      estimated_revenue: 0,
+      profit: 0,
+    },
+  )
+
   async function loadData() {
     try {
       setLoading(true)
@@ -272,6 +296,50 @@ export default function AdminRevenuePage() {
                 <th className="px-4 py-3">차익</th>
                 <th className="px-4 py-3 text-left">광고 1회당 수익</th>
                 <th className="px-4 py-3 text-left">차익률</th>
+              </tr>
+              <tr className="border-b border-zinc-200 bg-zinc-50 font-bold">
+                <th className="px-4 py-3">
+                  합계
+                </th>
+
+                <th className="px-4 py-3">
+                  {formatNumber(totals.earned_points)} P
+                </th>
+
+                <th className="px-4 py-3">
+                  {formatNumber(totals.ad_count)}
+                </th>
+
+                <th className="px-4 py-3">
+                  {formatNumber(totals.estimated_revenue)} 원
+                </th>
+
+                <th
+                  className={`px-4 py-3 ${getProfitTextClass(
+                    totals.profit,
+                  )}`}
+                >
+                  {formatNumber(totals.profit)} 원
+                </th>
+
+                <th className="px-4 py-3">
+                  {totals.ad_count > 0
+                    ? `${formatNumber(
+                      totals.estimated_revenue /
+                      totals.ad_count,
+                    )} 원`
+                    : '0 원'}
+                </th>
+
+                <th className="px-4 py-3">
+                  {totals.estimated_revenue > 0
+                    ? `${formatNumber(
+                      (totals.profit /
+                        totals.estimated_revenue) *
+                      100,
+                    )}%`
+                    : '0%'}
+                </th>
               </tr>
             </thead>
 
