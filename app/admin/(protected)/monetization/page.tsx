@@ -117,6 +117,8 @@ export default function AdminMonetizationPage() {
   const statusMap: Record<string, string> = {
     completed: '성공',
     failed: '실패',
+    notReady: '준비 안 됨',
+    skipped: '중간 종료',
   }
 
   const typeMap: Record<string, string> = {
@@ -245,8 +247,8 @@ export default function AdminMonetizationPage() {
             type="button"
             onClick={() => setTab('settings')}
             className={`rounded-lg px-4 py-2 text-sm ${tab === 'settings'
-                ? 'bg-black text-white'
-                : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-50'
+              ? 'bg-black text-white'
+              : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-50'
               }`}
           >
             설정
@@ -256,8 +258,8 @@ export default function AdminMonetizationPage() {
             type="button"
             onClick={() => setTab('logs')}
             className={`rounded-lg px-4 py-2 text-sm ${tab === 'logs'
-                ? 'bg-black text-white'
-                : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-50'
+              ? 'bg-black text-white'
+              : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-50'
               }`}
           >
             광고 로그
@@ -267,8 +269,8 @@ export default function AdminMonetizationPage() {
             type="button"
             onClick={() => setTab('placements')}
             className={`rounded-lg px-4 py-2 text-sm ${tab === 'placements'
-                ? 'bg-black text-white'
-                : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-50'
+              ? 'bg-black text-white'
+              : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-50'
               }`}
           >
             광고 위치 관리
@@ -377,8 +379,8 @@ export default function AdminMonetizationPage() {
                     type="button"
                     onClick={() => setLogFilter(item.key as typeof logFilter)}
                     className={`rounded-lg border px-3 py-2 text-sm ${logFilter === item.key
-                        ? 'bg-black text-white'
-                        : 'border-zinc-200 hover:bg-zinc-50'
+                      ? 'bg-black text-white'
+                      : 'border-zinc-200 hover:bg-zinc-50'
                       }`}
                   >
                     {item.label}
@@ -395,10 +397,24 @@ export default function AdminMonetizationPage() {
             <div
               key={log.id}
               className={`rounded-xl border p-5 text-sm shadow-sm ${log.ad_status === 'failed'
-                  ? 'border-red-200 bg-red-50'
-                  : 'border-zinc-200 bg-white'
+                ? 'border-red-200 bg-red-50'
+                : 'border-zinc-200 bg-white'
                 }`}
             >
+              <div className="mb-2">
+                <span
+                  className={`rounded-full px-2 py-1 text-xs font-semibold ${log.ad_status === 'failed'
+                    ? 'bg-red-100 text-red-700'
+                    : log.ad_status === 'completed'
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-zinc-100 text-zinc-700'
+                    }`}
+                >
+                  {log.ad_status
+                    ? statusMap[log.ad_status] || log.ad_status
+                    : '상태 없음'}
+                </span>
+              </div>
               <div className="font-semibold text-base mb-1">
                 {log.nickname || '닉네임 없음'}
               </div>
@@ -428,54 +444,72 @@ export default function AdminMonetizationPage() {
                     ? typeMap[log.unlock_type] || log.unlock_type
                     : '-'}
                 </div>
+
+                <div>광고 위치: {log.placement_id || '-'}</div>
+                <div>정책 키: {log.reward_policy_key || '-'}</div>
                 <div>사용 여부: {log.is_consumed ? '사용됨' : '미사용'}</div>
-                {log.placement_id && (
-                  <div>
-                    광고 위치: {log.placement_id}
-                  </div>
-                )}
 
-                {log.metadata && typeof log.metadata === 'object' && (
-                  <div className="mt-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-                    <div className="mb-1 font-semibold text-zinc-700">오류/상세 정보</div>
-
-                    {'reason' in log.metadata && (
-                      <div>
-                        사유: {String(log.metadata.reason)}
-                      </div>
-                    )}
-
-                    {'message' in log.metadata && (
-                      <div>
-                        메시지: {String(log.metadata.message)}
-                      </div>
-                    )}
-
-                    {'error' in log.metadata && (
-                      <div className="break-all">
-                        오류: {String(log.metadata.error)}
-                      </div>
-                    )}
-
-                    {'ad_watch_status' in log.metadata && (
-                      <div>
-                        광고 상태: {String(log.metadata.ad_watch_status)}
-                      </div>
-                    )}
-
-                    {'client_time' in log.metadata && (
-                      <div>
-                        앱 기록 시간: {String(log.metadata.client_time)}
-                      </div>
-                    )}
-                  </div>
-                )}
                 <div>
                   해금 시간:{' '}
                   {log.unlocked_at
                     ? new Date(log.unlocked_at).toLocaleString('ko-KR')
                     : '-'}
                 </div>
+
+                <div>
+                  소비 시간:{' '}
+                  {log.consumed_at
+                    ? new Date(log.consumed_at).toLocaleString('ko-KR')
+                    : '-'}
+                </div>
+
+                {log.metadata && typeof log.metadata === 'object' && (
+                  <div className="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                    <div className="mb-2 font-semibold text-zinc-800">
+                      광고 상세 / 오류 정보
+                    </div>
+
+                    {'reason' in log.metadata && (
+                      <div>사유: {String(log.metadata.reason)}</div>
+                    )}
+
+                    {'message' in log.metadata && (
+                      <div>메시지: {String(log.metadata.message)}</div>
+                    )}
+
+                    {'error' in log.metadata && (
+                      <div className="break-all">오류: {String(log.metadata.error)}</div>
+                    )}
+
+                    {'ad_watch_status' in log.metadata && (
+                      <div>광고 상태: {String(log.metadata.ad_watch_status)}</div>
+                    )}
+
+                    {'source' in log.metadata && (
+                      <div>기록 위치: {String(log.metadata.source)}</div>
+                    )}
+
+                    {'client_time' in log.metadata && (
+                      <div>앱 기록 시간: {String(log.metadata.client_time)}</div>
+                    )}
+
+                    {'is_expert_mode' in log.metadata && (
+                      <div>
+                        전문 모드:{' '}
+                        {String(log.metadata.is_expert_mode) === 'true' ? '예' : '아니오'}
+                      </div>
+                    )}
+
+                    <details className="mt-3">
+                      <summary className="cursor-pointer text-xs font-semibold text-zinc-600">
+                        원본 metadata 보기
+                      </summary>
+                      <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-all rounded-lg bg-black p-3 text-xs text-white">
+                        {JSON.stringify(log.metadata, null, 2)}
+                      </pre>
+                    </details>
+                  </div>
+                )}
               </div>
             </div>
           ))}
