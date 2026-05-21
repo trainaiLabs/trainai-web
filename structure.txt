@@ -1,72 +1,25 @@
 폴더 PATH의 목록입니다.
 볼륨 일련 번호는 8AC9-BEF1입니다.
-C:\TRAINAI-WEB\APP
-│  favicon.ico
-│  globals.css
-│  layout.tsx
-│  page.tsx
-│  
+C:\TRAINAI-WEB\LIB
 ├─admin
-│  ├─(protected)
-│  │  │  layout.tsx
-│  │  │  
-│  │  ├─account-delete-requests
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─accounts
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─dashboard
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─logs
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─monetization
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─notices
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─projects
-│  │  │  │  page.tsx
-│  │  │  │  
-│  │  │  └─[projectId]
-│  │  │          page.tsx
-│  │  │          
-│  │  ├─quality
-│  │  │  │  page.tsx
-│  │  │  │  
-│  │  │  └─[projectId]
-│  │  │          page.tsx
-│  │  │          
-│  │  ├─revenue
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─support-tickets
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─users
-│  │  │      page.tsx
-│  │  │      
-│  │  ├─withdrawals
-│  │  │      page.tsx
-│  │  │      
-│  │  └─workers
-│  │          page.tsx
-│  │          
-│  └─login
-│          page.tsx
-│          
-├─privacy
-│      page.tsx
+│      accountDeleteRequests.ts
+│      accounts.ts
+│      admin_guard.tsx
+│      logs.ts
+│      monetization.ts
+│      notices.ts
+│      quality.ts
+│      revenue.ts
+│      supportTickets.ts
+│      users.ts
+│      withdrawals.ts
+│      workers.ts
 │      
-├─recover-password
-│      page.tsx
+├─csv
+│      convertToCsv.ts
+│      downloadCsv.ts
 │      
-├─reset-password
-│      page.tsx
-│      
-└─terms
-        page.tsx
+└─supabase
+        client.ts
+        server.ts
         

@@ -29,6 +29,7 @@ function getProfitTextClass(value: number) {
 type BreakdownRow = {
   period: string
   paid_points: number
+  earned_points: number
   ad_count: number
   estimated_revenue: number
   profit: number
@@ -81,22 +82,22 @@ export default function AdminRevenuePage() {
   }
 
   async function syncAdmobRevenue() {
-  try {
-    setLoading(true)
+    try {
+      setLoading(true)
 
-    await syncAdmobRevenueRange(
-      startDate,
-      endDate,
-    )
+      await syncAdmobRevenueRange(
+        startDate,
+        endDate,
+      )
 
-    alert('AdMob 수익 동기화 완료')
-  } catch (e) {
-    console.error('sync error:', e)
-    alert(`AdMob 수익 동기화 실패\n${JSON.stringify(e)}`)
-  } finally {
-    setLoading(false)
+      alert('AdMob 수익 동기화 완료')
+    } catch (e) {
+      console.error('sync error:', e)
+      alert(`AdMob 수익 동기화 실패\n${JSON.stringify(e)}`)
+    } finally {
+      setLoading(false)
+    }
   }
-}
 
   async function handleRefresh() {
     await syncAdmobRevenue()
@@ -115,7 +116,7 @@ export default function AdminRevenuePage() {
         </h1>
 
         <p className="mt-2 text-sm text-zinc-500">
-          광고 예상 수익 및 포인트 지급 현황
+          광고 예상 수익 및 포인트 적립 현황
         </p>
       </div>
 
@@ -212,13 +213,13 @@ export default function AdminRevenuePage() {
 
           <div
             className={`mt-2 text-3xl font-black ${getProfitTextClass(
-                Number(summary?.total_profit ?? 0),
+              Number(summary?.total_profit ?? 0),
             )}`}
           >
             {formatNumber(summary?.total_profit)} 원
           </div>
         </div>
-                <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
           <div className="text-sm text-zinc-500">
             광고 시청 수
           </div>
@@ -265,7 +266,7 @@ export default function AdminRevenuePage() {
             <thead>
               <tr className="border-b border-zinc-200 text-left">
                 <th className="px-4 py-3">기간</th>
-                <th className="px-4 py-3">지급 포인트</th>
+                <th className="px-4 py-3">적립 포인트</th>
                 <th className="px-4 py-3">광고 수</th>
                 <th className="px-4 py-3">예상 광고 수익</th>
                 <th className="px-4 py-3">차익</th>
@@ -278,7 +279,7 @@ export default function AdminRevenuePage() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={7}
                     className="px-4 py-10 text-center text-zinc-500"
                   >
                     불러오는 중...
@@ -287,7 +288,7 @@ export default function AdminRevenuePage() {
               ) : rows.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={7}
                     className="px-4 py-10 text-center text-zinc-500"
                   >
                     데이터 없음
@@ -304,7 +305,7 @@ export default function AdminRevenuePage() {
                     </td>
 
                     <td className="px-4 py-3">
-                      {formatNumber(row.paid_points)} P
+                      {formatNumber(row.earned_points)} P
                     </td>
 
                     <td className="px-4 py-3">
@@ -316,24 +317,24 @@ export default function AdminRevenuePage() {
                     </td>
 
                     <td
-                        className={`px-4 py-3 font-bold ${getProfitTextClass(
-                            Number(row.profit ?? 0),
-                        )}`}
+                      className={`px-4 py-3 font-bold ${getProfitTextClass(
+                        Number(row.profit ?? 0),
+                      )}`}
                     >
                       {formatNumber(row.profit)} 원
                     </td>
 
                     <td className="px-4 py-3">
                       {row.ad_count > 0
-                      ? `${formatNumber(row.estimated_revenue / row.ad_count)} 원`
-                      : '0 원'}
+                        ? `${formatNumber(row.estimated_revenue / row.ad_count)} 원`
+                        : '0 원'}
                     </td>
 
                     <td className="px-4 py-3">
                       {row.estimated_revenue > 0
-                      ? `${formatNumber((row.profit / row.estimated_revenue) * 100)}%`
-                      : '0%'}
-                    </td>                    
+                        ? `${formatNumber((row.profit / row.estimated_revenue) * 100)}%`
+                        : '0%'}
+                    </td>
                   </tr>
                 ))
               )}
