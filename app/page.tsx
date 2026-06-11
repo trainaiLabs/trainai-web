@@ -27,23 +27,25 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              <span className="font-semibold text-[#7c3aed]">AI 답변</span>을 비교하고  
-                더 좋은 선택을 골라주세요.
+              <span className="font-semibold text-[#7c3aed]">AI 답변</span>을 비교하고
+              더 좋은 선택을 골라주세요.
               <br />
-                당신의 선택은 <span className="font-semibold text-[#7c3aed]">AI 학습 데이터</span>가 됩니다.
+              당신의 선택은 <span className="font-semibold text-[#7c3aed]">AI 학습 데이터</span>가 됩니다.
               <br /><br />
-                참여하면 <span className="font-semibold text-[#7c3aed]">포인트</span>가 쌓이고,  
-                <span className="font-semibold text-[#7c3aed]"> 출금 신청</span>으로  
-                <span className="font-semibold text-[#7c3aed]"> 보상</span>받을 수 있습니다.
+              참여하면 <span className="font-semibold text-[#7c3aed]">포인트</span>가 쌓이고,
+              <span className="font-semibold text-[#7c3aed]"> 출금 신청</span>으로
+              <span className="font-semibold text-[#7c3aed]"> 보상</span>받을 수 있습니다.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="#reward"
+              <a
+                href="https://play.google.com/store/apps/details?id=com.trainai.mobile"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-xl bg-[#8b5cf6] px-6 py-3 font-semibold text-white shadow-lg shadow-purple-200 transition hover:bg-[#7c3aed]"
               >
-                포인트 보상 알아보기
-              </Link>
+                Google Play 다운로드
+              </a>
               <Link
                 href="#about"
                 className="rounded-xl bg-white px-6 py-3 font-semibold text-[#7c3aed] shadow-sm transition hover:bg-purple-50"
@@ -78,9 +80,9 @@ export default function HomePage() {
       <section id="about" className="bg-white px-6 py-16">
         <div className="mx-auto max-w-6xl p-8">
           <h2 className="text-3xl font-bold">AI는 당신의 선택으로 성장합니다</h2>
-            <p className="mt-4 max-w-2xl text-slate-600">
-              TrainAI에서 당신은 AI를 가르치고, 더 나은 AI를 만드는 데 참여합니다.
-            </p>
+          <p className="mt-4 max-w-2xl text-slate-600">
+            TrainAI에서 당신은 AI를 가르치고, 더 나은 AI를 만드는 데 참여합니다.
+          </p>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             <FeatureCard
               title="퀘스트 참여"
@@ -119,8 +121,8 @@ export default function HomePage() {
           <h2 className="mt-5 text-3xl font-bold">기여에 대한 보상</h2>
 
           <p className="mt-4 max-w-3xl text-lg font-medium leading-8 text-slate-700">
-            퀘스트에 참여하면 <span className="font-semibold text-[#7c3aed]">포인트</span>와 XP가 쌓입니다.  
-            적립된 포인트는 <span className="font-semibold text-[#7c3aed]">출금 신청</span>을 통해  
+            퀘스트에 참여하면 <span className="font-semibold text-[#7c3aed]">포인트</span>와 XP가 쌓입니다.
+            적립된 포인트는 <span className="font-semibold text-[#7c3aed]">출금 신청</span>을 통해
             <span className="font-semibold text-[#7c3aed]">보상</span>받을 수 있습니다.
           </p>
 
@@ -157,7 +159,7 @@ export default function HomePage() {
           </div>
 
           <h2 className="text-3xl font-bold">
-            <span className="text-[#7c3aed]">AI를 가르치고</span>  
+            <span className="text-[#7c3aed]">AI를 가르치고</span>
             <span className="text-[#7c3aed]"> 보상</span>받으세요
           </h2>
         </div>
@@ -175,13 +177,15 @@ export default function HomePage() {
 
           <div className="mt-8 flex justify-center gap-4">
             <a
-              href="#reward"
+              href="https://play.google.com/store/apps/details?id=com.trainai.mobile"
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-xl bg-[#7c3aed] px-6 py-3 font-bold text-white shadow-lg shadow-purple-200 hover:bg-[#6d28d9]"
             >
-              보상 확인하고 시작하기
+              지금 다운로드하기
             </a>
             <p className="mt-4 text-sm text-slate-500">
-              TrainAI 앱은 현재 출시 준비 중입니다.
+              AI를 가르치고 포인트를 적립해보세요.
             </p>
           </div>
         </div>
@@ -202,7 +206,7 @@ export default function HomePage() {
   );
 }
 
-function FeatureCard({ title, text }: { title: string;   text: React.ReactNode; }) {
+function FeatureCard({ title, text }: { title: string; text: React.ReactNode; }) {
   return (
     <div className="rounded-2xl border border-purple-100 bg-white p-6 shadow-sm">
       <h3 className="text-lg font-bold text-[#7c3aed]">{title}</h3>
