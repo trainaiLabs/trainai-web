@@ -16,6 +16,7 @@ import {
   MessageCircle,
   FileText,
   ShieldAlert,
+  Settings,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -147,6 +148,12 @@ export default function ProtectedAdminLayout({
       roles: ['super_admin'],
     },
     {
+      name: '시스템설정',
+      href: '/admin/system-settings',
+      icon: Settings,
+      roles: ['super_admin'],
+    },
+    {
       name: '탈퇴요청',
       href: '/admin/account-delete-requests',
       icon: UserX,
@@ -214,11 +221,10 @@ export default function ProtectedAdminLayout({
             <Link
               key={item.href}
               href={item.href}
-              className={`block rounded-lg px-4 py-2 text-sm ${
-                isActive(item.href)
+              className={`block rounded-lg px-4 py-2 text-sm ${isActive(item.href)
                   ? 'bg-black text-white'
                   : 'text-zinc-700 hover:bg-zinc-100'
-              }`}
+                }`}
             >
               <span className="flex items-center gap-2">
                 <item.icon className="h-4 w-4" />
