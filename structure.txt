@@ -1,5 +1,5 @@
 폴더 PATH의 목록입니다.
-볼륨 일련 번호가 00000249 8AC9:BEF1입니다.
+볼륨 일련 번호가 00000291 8AC9:BEF1입니다.
 C:\TRAINAI-WEB\APP
 │  favicon.ico
 │  globals.css
@@ -44,6 +44,9 @@ C:\TRAINAI-WEB\APP
 │  │  │      page.tsx
 │  │  │      
 │  │  ├─support-tickets
+│  │  │      page.tsx
+│  │  │      
+│  │  ├─system-settings
 │  │  │      page.tsx
 │  │  │      
 │  │  ├─task-answer-moderation

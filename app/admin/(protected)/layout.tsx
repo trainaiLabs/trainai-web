@@ -17,6 +17,7 @@ import {
   FileText,
   ShieldAlert,
   Settings,
+  Sparkles,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -98,6 +99,12 @@ export default function ProtectedAdminLayout({
       href: '/admin/projects',
       icon: FolderKanban,
       roles: ['super_admin', 'uploader'],
+    },
+    {
+      name: '퀘스트 생성기',
+      href: '/admin/quest-generator',
+      icon: Sparkles,
+      roles: ['super_admin'],
     },
     {
       name: '품질관리',
@@ -222,8 +229,8 @@ export default function ProtectedAdminLayout({
               key={item.href}
               href={item.href}
               className={`block rounded-lg px-4 py-2 text-sm ${isActive(item.href)
-                  ? 'bg-black text-white'
-                  : 'text-zinc-700 hover:bg-zinc-100'
+                ? 'bg-black text-white'
+                : 'text-zinc-700 hover:bg-zinc-100'
                 }`}
             >
               <span className="flex items-center gap-2">
