@@ -5,13 +5,10 @@ import { supabase } from '../../../../lib/supabase/client'
 
 type MaterialCsvRow = {
     name: string
-    category: string
-    memo?: string
 }
 
 type EventCsvRow = {
     name: string
-    description?: string
 }
 
 function downloadTextFile(filename: string, content: string) {
@@ -64,7 +61,7 @@ export default function QuestGeneratorPage() {
 
         const { data, error } = await supabase
             .from('quest_generator_materials')
-            .select('name, category, memo, usage_count, is_active, created_at')
+            .select('name, usage_count, is_active, created_at')
             .order('created_at', { ascending: false })
 
         setLoading(false)
@@ -78,8 +75,6 @@ export default function QuestGeneratorPage() {
             'quest_materials.csv',
             toCsv(data ?? [], [
                 'name',
-                'category',
-                'memo',
                 'usage_count',
                 'is_active',
                 'created_at',
@@ -92,7 +87,7 @@ export default function QuestGeneratorPage() {
 
         const { data, error } = await supabase
             .from('quest_generator_events')
-            .select('name, description, is_active, created_at')
+            .select('name, usage_count, is_active, created_at')
             .order('created_at', { ascending: false })
 
         setLoading(false)
@@ -104,7 +99,7 @@ export default function QuestGeneratorPage() {
 
         downloadTextFile(
             'quest_events.csv',
-            toCsv(data ?? [], ['name', 'description', 'is_active', 'created_at'])
+            toCsv(data ?? [], ['name', 'usage_count', 'is_active', 'created_at'])
         )
     }
 
@@ -115,8 +110,6 @@ export default function QuestGeneratorPage() {
         const validRows = rows
             .map((row) => ({
                 name: row.name?.trim(),
-                category: row.category?.trim() || '기타',
-                memo: row.memo?.trim() || null,
             }))
             .filter((row) => row.name)
 
@@ -164,7 +157,6 @@ export default function QuestGeneratorPage() {
         const validRows = rows
             .map((row) => ({
                 name: row.name?.trim(),
-                description: row.description?.trim() || null,
             }))
             .filter((row) => row.name)
 
@@ -208,14 +200,14 @@ export default function QuestGeneratorPage() {
     function downloadMaterialSample() {
         downloadTextFile(
             'quest_materials_sample.csv',
-            '\uFEFFname,category,memo\n오래된 라디오,추억,소리 추억 소재\n낡은 우체통,장소,동네 미스터리 소재'
+            '\uFEFFname\n오래된 라디오\n유리병 속 쪽지'
         )
     }
 
     function downloadEventSample() {
         downloadTextFile(
             'quest_events_sample.csv',
-            '\uFEFFname,description\n발견,무언가를 발견하거나 주운 상황\n수신,편지 쪽지 알림 택배 등을 받는 상황'
+            '\uFEFFname\n발견\n수신\n변화'
         )
     }
 
