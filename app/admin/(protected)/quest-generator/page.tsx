@@ -93,7 +93,7 @@ export default function QuestGeneratorPage() {
         setLoading(false)
 
         if (error) {
-            alert('사건 다운로드 실패: ' + error.message)
+            alert('질문패턴 다운로드 실패: ' + error.message)
             return
         }
 
@@ -161,7 +161,7 @@ export default function QuestGeneratorPage() {
             .filter((row) => row.name)
 
         if (validRows.length === 0) {
-            alert('업로드할 사건이 없습니다. CSV 헤더는 name,description 입니다.')
+            alert('업로드할 질문패턴이 없습니다. CSV 헤더는 name,description 입니다.')
             return
         }
 
@@ -179,7 +179,7 @@ export default function QuestGeneratorPage() {
 
         if (insertRows.length === 0) {
             setLoading(false)
-            alert('새로 등록할 사건 유형이 없습니다.')
+            alert('새로 등록할 질문 패턴이 없습니다.')
             return
         }
 
@@ -190,11 +190,11 @@ export default function QuestGeneratorPage() {
         setLoading(false)
 
         if (error) {
-            alert('사건 업로드 실패: ' + error.message)
+            alert('질문패턴 업로드 실패: ' + error.message)
             return
         }
 
-        alert(`${insertRows.length}개 사건 유형을 등록했습니다.`)
+        alert(`${insertRows.length}개 질문패턴 유형을 등록했습니다.`)
     }
 
     function downloadMaterialSample() {
@@ -207,7 +207,7 @@ export default function QuestGeneratorPage() {
     function downloadEventSample() {
         downloadTextFile(
             'quest_events_sample.csv',
-            '\uFEFFname\n발견\n수신\n변화'
+            '\uFEFFname\n주머니에서 {material}가 나온다면\n현관 앞에 {material}가 놓여 있다면\n{material}가 말을 건다면'
         )
     }
 
@@ -216,7 +216,7 @@ export default function QuestGeneratorPage() {
             <div>
                 <h1 className="text-2xl font-bold">퀘스트 생성기</h1>
                 <p className="mt-2 text-sm text-zinc-500">
-                    소재와 사건 유형을 CSV 파일로 내려받고 업로드합니다.
+                    소재와 질문패턴 유형을 CSV 파일로 내려받고 업로드합니다.
                 </p>
             </div>
 
@@ -259,7 +259,7 @@ export default function QuestGeneratorPage() {
             </section>
 
             <section className="rounded-2xl border bg-white p-5 shadow-sm">
-                <h2 className="text-lg font-bold">사건 유형 관리</h2>
+                <h2 className="text-lg font-bold">질문패턴 유형 관리</h2>
                 <p className="mt-1 text-sm text-zinc-500">
                     업로드 CSV 헤더: name, description
                 </p>
@@ -270,18 +270,18 @@ export default function QuestGeneratorPage() {
                         disabled={loading}
                         className="rounded-lg bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
                     >
-                        사건 다운로드
+                        질문패턴 다운로드
                     </button>
 
                     <button
                         onClick={downloadEventSample}
                         className="rounded-lg border px-4 py-2 text-sm hover:bg-zinc-50"
                     >
-                        사건 샘플 다운로드
+                        질문패턴 샘플 다운로드
                     </button>
 
                     <label className="cursor-pointer rounded-lg border px-4 py-2 text-sm hover:bg-zinc-50">
-                        사건 업로드
+                        질문패턴 업로드
                         <input
                             type="file"
                             accept=".csv"
