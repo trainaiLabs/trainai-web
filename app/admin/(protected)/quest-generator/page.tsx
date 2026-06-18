@@ -108,7 +108,7 @@ export default function QuestGeneratorPage() {
         const text = await file.text()
         const rows = parseCsv(text)
 
-        const validTypes = ['object', 'situation', 'trace', 'place']
+        const validTypes = ['object', 'situation', 'trace', 'place', 'digital', 'event']
 
         const validRows = rows
             .map((row) => ({
@@ -163,7 +163,7 @@ export default function QuestGeneratorPage() {
         const text = await file.text()
         const rows = parseCsv(text)
 
-        const validTypes = ['object', 'situation', 'trace', 'place']
+        const validTypes = ['object', 'situation', 'trace', 'place', 'digital', 'event']
 
         const validRows = rows
             .map((row) => ({
