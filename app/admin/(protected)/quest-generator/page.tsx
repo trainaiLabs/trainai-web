@@ -61,7 +61,7 @@ export default function QuestGeneratorPage() {
 
         const { data, error } = await supabase
             .from('quest_generator_materials')
-            .select('name, usage_count, is_active, created_at')
+            .select('name, material_type, usage_count, is_active, created_at')
             .order('created_at', { ascending: false })
 
         setLoading(false)
@@ -75,6 +75,7 @@ export default function QuestGeneratorPage() {
             'quest_materials.csv',
             toCsv(data ?? [], [
                 'name',
+                'material_type',
                 'usage_count',
                 'is_active',
                 'created_at',
@@ -87,7 +88,7 @@ export default function QuestGeneratorPage() {
 
         const { data, error } = await supabase
             .from('quest_generator_events')
-            .select('name, usage_count, is_active, created_at')
+            .select('name, pattern_type, usage_count, is_active, created_at')
             .order('created_at', { ascending: false })
 
         setLoading(false)
@@ -99,46 +100,54 @@ export default function QuestGeneratorPage() {
 
         downloadTextFile(
             'quest_events.csv',
-            toCsv(data ?? [], ['name', 'usage_count', 'is_active', 'created_at'])
+            toCsv(data ?? [], ['name', 'pattern_type', 'usage_count', 'is_active', 'created_at'])
         )
     }
 
     async function uploadMaterials(file: File) {
         const text = await file.text()
-        const rows = parseCsv(text) as MaterialCsvRow[]
+        const rows = parseCsv(text)
+
+        const validTypes = ['object', 'situation', 'trace', 'place']
 
         const validRows = rows
             .map((row) => ({
                 name: row.name?.trim(),
+                material_type: row.material_type?.trim() || 'object',
             }))
             .filter((row) => row.name)
 
-        if (validRows.length === 0) {
-            alert('업로드할 소재가 없습니다. CSV 헤더는 name,category,memo 입니다.')
+        const invalid = validRows.find(
+            (row) => !validTypes.includes(row.material_type)
+        )
+
+        if (invalid) {
+            alert(
+                `소재 타입 오류: ${invalid.name} / ${invalid.material_type}\n가능한 값: object, situation, trace, place`
+            )
+            return
+        }
+
+        if (!confirm(`기존 소재를 모두 삭제하고 ${validRows.length}개를 새로 등록할까요?`)) {
             return
         }
 
         setLoading(true)
 
-        const { data: existing } = await supabase
+        const { error: deleteError } = await supabase
             .from('quest_generator_materials')
-            .select('name')
+            .delete()
+            .neq('id', '00000000-0000-0000-0000-000000000000')
 
-        const existingSet = new Set(
-            (existing ?? []).map((item) => item.name.trim())
-        )
-
-        const insertRows = validRows.filter((row) => !existingSet.has(row.name))
-
-        if (insertRows.length === 0) {
+        if (deleteError) {
             setLoading(false)
-            alert('새로 등록할 소재가 없습니다.')
+            alert('기존 소재 삭제 실패: ' + deleteError.message)
             return
         }
 
         const { error } = await supabase
             .from('quest_generator_materials')
-            .insert(insertRows)
+            .insert(validRows)
 
         setLoading(false)
 
@@ -147,53 +156,64 @@ export default function QuestGeneratorPage() {
             return
         }
 
-        alert(`${insertRows.length}개 소재를 등록했습니다.`)
+        alert(`${validRows.length}개 소재를 새로 등록했습니다.`)
     }
 
     async function uploadEvents(file: File) {
         const text = await file.text()
-        const rows = parseCsv(text) as EventCsvRow[]
+        const rows = parseCsv(text)
+
+        const validTypes = ['object', 'situation', 'trace', 'place']
 
         const validRows = rows
             .map((row) => ({
                 name: row.name?.trim(),
+                pattern_type: row.pattern_type?.trim() || 'object',
             }))
             .filter((row) => row.name)
 
-        if (validRows.length === 0) {
-            alert('업로드할 질문패턴이 없습니다. CSV 헤더는 name,description 입니다.')
+        const invalidType = validRows.find(
+            (row) => !validTypes.includes(row.pattern_type)
+        )
+
+        if (invalidType) {
+            alert(
+                `질문패턴 타입 오류: ${invalidType.name} / ${invalidType.pattern_type}\n가능한 값: object, situation, trace, place`
+            )
             return
         }
 
-        const invalidRow = validRows.find((row) => validatePattern(row.name))
+        const invalidPattern = validRows.find((row) => !row.name.includes('{material}'))
 
-        if (invalidRow) {
-            alert(validatePattern(invalidRow.name))
-            setLoading(false)
+        if (invalidPattern) {
+            alert(`질문패턴에는 {material}이 필요합니다.\n문제 패턴: ${invalidPattern.name}`)
+            return
+        }
+
+        if (
+            !confirm(
+                `기존 질문패턴을 모두 삭제하고 ${validRows.length}개를 새로 등록할까요?`
+            )
+        ) {
             return
         }
 
         setLoading(true)
 
-        const { data: existing } = await supabase
+        const { error: deleteError } = await supabase
             .from('quest_generator_events')
-            .select('name')
+            .delete()
+            .neq('id', '00000000-0000-0000-0000-000000000000')
 
-        const existingSet = new Set(
-            (existing ?? []).map((item) => item.name.trim())
-        )
-
-        const insertRows = validRows.filter((row) => !existingSet.has(row.name))
-
-        if (insertRows.length === 0) {
+        if (deleteError) {
             setLoading(false)
-            alert('새로 등록할 질문 패턴이 없습니다.')
+            alert('기존 질문패턴 삭제 실패: ' + deleteError.message)
             return
         }
 
         const { error } = await supabase
             .from('quest_generator_events')
-            .insert(insertRows)
+            .insert(validRows)
 
         setLoading(false)
 
@@ -202,20 +222,20 @@ export default function QuestGeneratorPage() {
             return
         }
 
-        alert(`${insertRows.length}개 질문패턴 유형을 등록했습니다.`)
+        alert(`${validRows.length}개 질문패턴을 새로 등록했습니다.`)
     }
 
     function downloadMaterialSample() {
         downloadTextFile(
             'quest_materials_sample.csv',
-            '\uFEFFname\n오래된 라디오\n유리병 속 쪽지'
+            '\uFEFFname,material_type\n정체불명의 열쇠고리,object\n사라진 안내방송,situation\n이상한 발자국,trace\n새벽의 편의점,place'
         )
     }
 
     function downloadEventSample() {
         downloadTextFile(
             'quest_events_sample.csv',
-            '\uFEFFname\n주머니에서 {material}가 나온다면\n현관 앞에 {material}가 놓여 있다면\n{material}가 말을 건다면'
+            '\uFEFFname,pattern_type\n{material}의 주인을 찾아야 한다면,object\n{material} 때문에 분위기가 달라진다면,situation\n{material}를 남긴 사람이 궁금하다면,trace\n{material}에서 예상치 못한 일이 벌어진다면,place'
         )
     }
 
