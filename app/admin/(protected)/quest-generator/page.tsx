@@ -147,7 +147,7 @@ export default function QuestGeneratorPage() {
 
         const { error } = await supabase
             .from('quest_generator_materials')
-            .insert(validRows)
+            .upsert(validRows)
 
         setLoading(false)
 
@@ -213,7 +213,7 @@ export default function QuestGeneratorPage() {
 
         const { error } = await supabase
             .from('quest_generator_events')
-            .insert(validRows)
+            .upsert(validRows)
 
         setLoading(false)
 
