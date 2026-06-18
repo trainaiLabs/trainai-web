@@ -128,26 +128,26 @@ export default function QuestGeneratorPage() {
             return
         }
 
-        if (!confirm(`기존 소재를 모두 삭제하고 ${validRows.length}개를 새로 등록할까요?`)) {
+        const seen = new Set<string>()
+        const dedupedRows = validRows.filter((row) => {
+            const key = row.name.trim()
+            if (seen.has(key)) return false
+            seen.add(key)
+            return true
+        })
+
+        if (dedupedRows.length === 0) {
+            alert('업로드할 소재가 없습니다.')
             return
         }
 
         setLoading(true)
 
-        const { error: deleteError } = await supabase
-            .from('quest_generator_materials')
-            .delete()
-            .neq('id', '00000000-0000-0000-0000-000000000000')
-
-        if (deleteError) {
-            setLoading(false)
-            alert('기존 소재 삭제 실패: ' + deleteError.message)
-            return
-        }
-
         const { error } = await supabase
             .from('quest_generator_materials')
-            .upsert(validRows)
+            .upsert(dedupedRows, {
+                onConflict: 'name',
+            })
 
         setLoading(false)
 
@@ -156,7 +156,7 @@ export default function QuestGeneratorPage() {
             return
         }
 
-        alert(`${validRows.length}개 소재를 새로 등록했습니다.`)
+        alert(`${dedupedRows.length}개 소재를 등록 또는 업데이트했습니다.`)
     }
 
     async function uploadEvents(file: File) {
@@ -183,37 +183,33 @@ export default function QuestGeneratorPage() {
             return
         }
 
-        const invalidPattern = validRows.find((row) => !row.name.includes('{material}'))
+        const invalidPattern = validRows.find((row) => validatePattern(row.name))
 
         if (invalidPattern) {
-            alert(`질문패턴에는 {material}이 필요합니다.\n문제 패턴: ${invalidPattern.name}`)
+            alert(validatePattern(invalidPattern.name))
             return
         }
 
-        if (
-            !confirm(
-                `기존 질문패턴을 모두 삭제하고 ${validRows.length}개를 새로 등록할까요?`
-            )
-        ) {
+        const seen = new Set<string>()
+        const dedupedRows = validRows.filter((row) => {
+            const key = row.name.trim()
+            if (seen.has(key)) return false
+            seen.add(key)
+            return true
+        })
+
+        if (dedupedRows.length === 0) {
+            alert('업로드할 질문패턴이 없습니다.')
             return
         }
 
         setLoading(true)
 
-        const { error: deleteError } = await supabase
-            .from('quest_generator_events')
-            .delete()
-            .neq('id', '00000000-0000-0000-0000-000000000000')
-
-        if (deleteError) {
-            setLoading(false)
-            alert('기존 질문패턴 삭제 실패: ' + deleteError.message)
-            return
-        }
-
         const { error } = await supabase
             .from('quest_generator_events')
-            .upsert(validRows)
+            .upsert(dedupedRows, {
+                onConflict: 'name',
+            })
 
         setLoading(false)
 
@@ -222,7 +218,7 @@ export default function QuestGeneratorPage() {
             return
         }
 
-        alert(`${validRows.length}개 질문패턴을 새로 등록했습니다.`)
+        alert(`${dedupedRows.length}개 질문패턴을 등록 또는 업데이트했습니다.`)
     }
 
     function downloadMaterialSample() {
@@ -274,7 +270,7 @@ export default function QuestGeneratorPage() {
             <section className="rounded-2xl border bg-white p-5 shadow-sm">
                 <h2 className="text-lg font-bold">소재 관리</h2>
                 <p className="mt-1 text-sm text-zinc-500">
-                    업로드 CSV 헤더: name, category, memo
+                    업로드 CSV 헤더: name, material_type
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -312,7 +308,7 @@ export default function QuestGeneratorPage() {
             <section className="rounded-2xl border bg-white p-5 shadow-sm">
                 <h2 className="text-lg font-bold">질문패턴 유형 관리</h2>
                 <p className="mt-1 text-sm text-zinc-500">
-                    업로드 CSV 헤더: name, description
+                    업로드 CSV 헤더: name, pattern_type
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
