@@ -165,6 +165,14 @@ export default function QuestGeneratorPage() {
             return
         }
 
+        const invalidRow = validRows.find((row) => validatePattern(row.name))
+
+        if (invalidRow) {
+            alert(validatePattern(invalidRow.name))
+            setLoading(false)
+            return
+        }
+
         setLoading(true)
 
         const { data: existing } = await supabase
@@ -209,6 +217,29 @@ export default function QuestGeneratorPage() {
             'quest_events_sample.csv',
             '\uFEFFname\n주머니에서 {material}가 나온다면\n현관 앞에 {material}가 놓여 있다면\n{material}가 말을 건다면'
         )
+    }
+
+    function validatePattern(name: string) {
+        if (!name.includes('{material}')) {
+            return '질문패턴에는 {material}이 반드시 들어가야 합니다.'
+        }
+
+        const banned = [
+            '{material}가',
+            '{material}이',
+            '{material}를',
+            '{material}을',
+            '{material}는',
+            '{material}은',
+        ]
+
+        const found = banned.find((item) => name.includes(item))
+
+        if (found) {
+            return `${found} 직접 사용 금지. {subject} {object} {topic}을 사용해주세요.`
+        }
+
+        return null
     }
 
     return (
