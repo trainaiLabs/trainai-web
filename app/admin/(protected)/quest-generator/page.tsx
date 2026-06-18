@@ -240,21 +240,6 @@ export default function QuestGeneratorPage() {
             return '질문패턴에는 {material}이 반드시 들어가야 합니다.'
         }
 
-        const banned = [
-            '{material}가',
-            '{material}이',
-            '{material}를',
-            '{material}을',
-            '{material}는',
-            '{material}은',
-        ]
-
-        const found = banned.find((item) => name.includes(item))
-
-        if (found) {
-            return `${found} 직접 사용 금지. {subject} {object} {topic}을 사용해주세요.`
-        }
-
         return null
     }
 
