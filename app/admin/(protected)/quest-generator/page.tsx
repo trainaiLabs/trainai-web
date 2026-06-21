@@ -61,7 +61,7 @@ export default function QuestGeneratorPage() {
 
         const { data, error } = await supabase
             .from('quest_generator_materials')
-            .select('name, material_type, usage_count, is_active, created_at')
+            .select('name, material_type, material_tag, usage_count, is_active, created_at')
             .order('created_at', { ascending: false })
 
         setLoading(false)
@@ -76,6 +76,7 @@ export default function QuestGeneratorPage() {
             toCsv(data ?? [], [
                 'name',
                 'material_type',
+                'material_tag',
                 'usage_count',
                 'is_active',
                 'created_at',
@@ -108,12 +109,13 @@ export default function QuestGeneratorPage() {
         const text = await file.text()
         const rows = parseCsv(text)
 
-        const validTypes = ['object', 'situation', 'trace', 'place', 'digital', 'event']
+        const validTypes = ['object', 'concept', 'trace', 'place', 'digital', 'event']
 
         const validRows = rows
             .map((row) => ({
                 name: row.name?.trim(),
                 material_type: row.material_type?.trim() || 'object',
+                material_tag: row.material_tag?.trim() || 'general',
             }))
             .filter((row) => row.name)
 
@@ -224,7 +226,7 @@ export default function QuestGeneratorPage() {
     function downloadMaterialSample() {
         downloadTextFile(
             'quest_materials_sample.csv',
-            '\uFEFFname,material_type\n정체불명의 열쇠고리,object\n사라진 안내방송,situation\n이상한 발자국,trace\n새벽의 편의점,place'
+            '\uFEFFname,material_type,material_tag\n열리지 않은 시간캡슐,object,container\n멈춘 시계탑,place,fixed_place\n전송되지 않은 메시지,digital,message'
         )
     }
 
