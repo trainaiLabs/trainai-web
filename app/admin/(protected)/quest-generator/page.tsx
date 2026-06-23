@@ -9,6 +9,9 @@ type MaterialCsvRow = {
 
 type EventCsvRow = {
     name: string
+    pattern_type: string
+    primary_style: string
+    secondary_style: string
 }
 
 function downloadTextFile(filename: string, content: string) {
@@ -89,7 +92,7 @@ export default function QuestGeneratorPage() {
 
         const { data, error } = await supabase
             .from('quest_generator_events')
-            .select('name, pattern_type, usage_count, is_active, created_at')
+            .select('name, pattern_type, primary_style, secondary_style, usage_count, is_active, created_at')
             .order('created_at', { ascending: false })
 
         setLoading(false)
@@ -101,7 +104,15 @@ export default function QuestGeneratorPage() {
 
         downloadTextFile(
             'quest_events.csv',
-            toCsv(data ?? [], ['name', 'pattern_type', 'usage_count', 'is_active', 'created_at'])
+            toCsv(data ?? [], [
+                'name',
+                'pattern_type',
+                'primary_style',
+                'secondary_style',
+                'usage_count',
+                'is_active',
+                'created_at',
+            ])
         )
     }
 
@@ -167,10 +178,23 @@ export default function QuestGeneratorPage() {
 
         const validTypes = ['object', 'situation', 'trace', 'place', 'digital', 'event']
 
+        const validStyles = [
+            'mystery',
+            'choice',
+            'conflict',
+            'relationship',
+            'fantasy',
+            'game',
+            'daily',
+            'meaning',
+        ]
+
         const validRows = rows
             .map((row) => ({
                 name: row.name?.trim(),
                 pattern_type: row.pattern_type?.trim() || 'object',
+                primary_style: row.primary_style?.trim() || 'daily',
+                secondary_style: row.secondary_style?.trim() || 'meaning',
             }))
             .filter((row) => row.name)
 
@@ -181,6 +205,19 @@ export default function QuestGeneratorPage() {
         if (invalidType) {
             alert(
                 `질문패턴 타입 오류: ${invalidType.name} / ${invalidType.pattern_type}\n가능한 값: object, situation, trace, place`
+            )
+            return
+        }
+
+        const invalidStyle = validRows.find(
+            (row) =>
+                !validStyles.includes(row.primary_style) ||
+                !validStyles.includes(row.secondary_style)
+        )
+
+        if (invalidStyle) {
+            alert(
+                `질문패턴 스타일 오류: ${invalidStyle.name}\n가능한 값: mystery, choice, conflict, relationship, fantasy, game, daily, meaning`
             )
             return
         }
@@ -233,7 +270,7 @@ export default function QuestGeneratorPage() {
     function downloadEventSample() {
         downloadTextFile(
             'quest_events_sample.csv',
-            '\uFEFFname,pattern_type\n{material}의 주인을 찾아야 한다면,object\n{material} 때문에 분위기가 달라진다면,situation\n{material}를 남긴 사람이 궁금하다면,trace\n{material}에서 예상치 못한 일이 벌어진다면,place'
+            '\uFEFFname,pattern_type,primary_style,secondary_style\n{material}의 주인을 찾아야 한다면,object,mystery,meaning\n{material} 때문에 분위기가 달라진다면,event,daily,meaning\n{material}를 두고 선택이 갈린다면,situation,choice,conflict\n{material}가 말을 건다면,object,fantasy,relationship'
         )
     }
 
@@ -295,7 +332,7 @@ export default function QuestGeneratorPage() {
             <section className="rounded-2xl border bg-white p-5 shadow-sm">
                 <h2 className="text-lg font-bold">질문패턴 유형 관리</h2>
                 <p className="mt-1 text-sm text-zinc-500">
-                    업로드 CSV 헤더: name, pattern_type
+                    업로드 CSV 헤더: name, pattern_type, primary_style, secondary_style
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
