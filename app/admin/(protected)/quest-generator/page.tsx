@@ -187,6 +187,7 @@ export default function QuestGeneratorPage() {
             'game',
             'daily',
             'meaning',
+            'survival',
         ]
 
         const validRows = rows
@@ -204,7 +205,7 @@ export default function QuestGeneratorPage() {
 
         if (invalidType) {
             alert(
-                `질문패턴 타입 오류: ${invalidType.name} / ${invalidType.pattern_type}\n가능한 값: object, situation, trace, place`
+                `질문패턴 타입 오류: ${invalidType.name} / ${invalidType.pattern_type}\n가능한 값: object, situation, trace, place, digital, event`
             )
             return
         }
@@ -217,7 +218,7 @@ export default function QuestGeneratorPage() {
 
         if (invalidStyle) {
             alert(
-                `질문패턴 스타일 오류: ${invalidStyle.name}\n가능한 값: mystery, choice, conflict, relationship, fantasy, game, daily, meaning`
+                `질문패턴 스타일 오류: ${invalidStyle.name}\n가능한 값: mystery, choice, conflict, relationship, fantasy, game, daily, meaning, survival`
             )
             return
         }
