@@ -191,15 +191,38 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="bg-white px-6 py-10 text-center text-sm text-slate-500">
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <span>© 2026 TrainAI. All rights reserved.</span>
-          <Link href="/terms" className="hover:text-[#7c3aed]">
-            이용약관
-          </Link>
-          <Link href="/privacy" className="hover:text-[#7c3aed]">
-            개인정보처리방침
-          </Link>
+      <footer className="bg-white px-6 py-10 text-sm text-slate-500">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col items-center gap-3 text-center">
+            <p className="font-semibold text-slate-700">
+              TrainAI는 비니버스(Biniverse)에서 개발 및 운영하는 AI 서비스입니다.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+              <span>비니버스 (Biniverse)</span>
+              <span>사업자등록번호 : 498-09-01932</span>
+              <a
+                href="mailto:support@trainai.co.kr"
+                className="hover:text-[#7c3aed]"
+              >
+                admin@trainai.co.kr
+              </a>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link href="/terms" className="hover:text-[#7c3aed]">
+                이용약관
+              </Link>
+
+              <Link href="/privacy" className="hover:text-[#7c3aed]">
+                개인정보처리방침
+              </Link>
+            </div>
+
+            <p className="pt-2">
+              © 2026 Biniverse. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </main>
